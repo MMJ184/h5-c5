@@ -1,0 +1,27 @@
+/* src/index.css */
+
+/* make sure body uses antd background tokens where appropriate */
+:root {
+  --antd-layout-header-bg: rgba(255, 255, 255, 0.02);
+  --antd-layout-sider-bg: #ffffff;
+  --antd-layout-content-bg: #ffffff;
+}
+
+/* simple resets */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family:
+    Inter,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial;
+  background: #f5f7fa;
+}
+
+/* when antd's dark algorithm is applied, some colors are derived automatically.
+   We keep these CSS variables conservative; ConfigProvider tokens will do the heavy lifting. */
