@@ -115,11 +115,20 @@ export default function SidePanelResponsive({
           placement="left"
           onClose={() => setDrawerOpenEffective(false)}
           open={drawerOpenEffective}
-          bodyStyle={{ padding: 0, background: token.colorBgContainer }}
-          width={siderWidth}
-          headerStyle={{ background: token.colorBgElevated }}
-          maskStyle={{ background: 'rgba(0,0,0,0.25)' }}
-          destroyOnClose={false}
+
+          // use `size` for width (accepts 'default' | 'large' | number)
+          size={siderWidth}
+
+          // per-area styling moved into `styles`
+          styles={{
+            body: { padding: 0, background: token.colorBgContainer },    // replaces bodyStyle
+            header: { background: token.colorBgElevated },               // replaces headerStyle
+            // content: { /* optional: tuning for panel wrapper */ },       // e.g. maxWidth, padding
+            mask: { background: 'rgba(0,0,0,0.25)' },                    // replaces maskStyle
+          }}
+
+          // keep destroyOnHidden behavior (v5+ prop)
+          destroyOnHidden={false}
         >
           <div style={{ height: 64 }} />
           {menu}

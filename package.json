@@ -12,11 +12,13 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@ant-design/charts": "^2.6.6",
     "@ant-design/icons": "^6.1.0",
     "@ant-design/plots": "^2.6.6",
     "antd": "^6.0.0",
     "axios": "^1.13.2",
     "dayjs": "^1.11.19",
+    "eslint-config-prettier": "^10.1.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^6.30.2"

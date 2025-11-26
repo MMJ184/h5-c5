@@ -78,35 +78,48 @@ export default function AppointmentPage() {
 
   return (
     <Card>
-      <Tabs defaultActiveKey="calendar">
-        <Tabs.TabPane key="calendar" tab="Calendar">
-          <AppointmentCalendar
-            appointments={appointments}
-            loading={loading}
-            onCreateForDate={(d) => openCreateForDate(d)}
-            onEdit={(a) => openEdit(a)}
-          />
-        </Tabs.TabPane>
-
-        <Tabs.TabPane key="kanban" tab="Kanban">
-          <AppointmentKanban
-            appointments={appointments}
-            loading={loading}
-            onEdit={(a) => openEdit(a)}
-            onDelete={handleDelete}
-            onChangeStatus={handleChangeStatus}
-          />
-        </Tabs.TabPane>
-
-        <Tabs.TabPane key="list" tab="List">
-          <AppointmentList
-            appointments={appointments}
-            loading={loading}
-            onEdit={(a) => openEdit(a)}
-            onDelete={handleDelete}
-          />
-        </Tabs.TabPane>
-      </Tabs>
+      <Tabs
+        defaultActiveKey="calendar"
+        items={[
+          {
+            key: "calendar",
+            label: "Calendar",
+            children: (
+              <AppointmentCalendar
+                appointments={appointments}
+                loading={loading}
+                onCreateForDate={(d) => openCreateForDate(d)}
+                onEdit={(a) => openEdit(a)}
+              />
+            ),
+          },
+          {
+            key: "kanban",
+            label: "Kanban",
+            children: (
+              <AppointmentKanban
+                appointments={appointments}
+                loading={loading}
+                onEdit={(a) => openEdit(a)}
+                onDelete={handleDelete}
+                onChangeStatus={handleChangeStatus}
+              />
+            ),
+          },
+          {
+            key: "list",
+            label: "List",
+            children: (
+              <AppointmentList
+                appointments={appointments}
+                loading={loading}
+                onEdit={(a) => openEdit(a)}
+                onDelete={handleDelete}
+              />
+            ),
+          },
+        ]}
+      />
 
       <AppointmentForm
         visible={formVisible}

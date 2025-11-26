@@ -66,7 +66,7 @@ export default function AppointmentForm({ visible, initial, confirmLoading, onCa
       }}
       onOk={handleOk}
       confirmLoading={confirmLoading}
-      destroyOnClose
+      destroyOnHidden={true}
       okText={initial ? 'Update' : 'Create'}
     >
       <Form layout="vertical" form={form}>

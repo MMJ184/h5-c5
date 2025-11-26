@@ -68,10 +68,22 @@ export default function ThemePanel({ open, onClose }: Props) {
         </Space>
       }
       placement="right"
-      width={360}
-      onClose={onClose}
       open={open}
-      bodyStyle={{ padding: 16 }}
+      onClose={onClose}
+
+      // Use `size` instead of `width`. You can pass a number (pixels) or a preset.
+      size={360}
+
+      // All per-area styling goes into `styles`
+      styles={{
+        header: { padding: 16 },          // replaces headerStyle
+        body: { padding: 16 },            // replaces bodyStyle
+        footer: { padding: 16 },          // optional
+        mask: undefined,                  // optional mask styling
+      }}
+
+      // Use rootStyle for the outer wrapper if you need to style the very outer element
+      // rootStyle={{ /* outer wrapper styles here */ }}
     >
       <Space orientation="vertical" size="large" style={{ width: '100%' }}>
         <div>

@@ -1,4 +1,5 @@
-import ApiClient from '../../api/ApiClient';
+import ApiClient from "../../../api/ApiClient.ts";
+
 
 export type AppointmentPayload = {
   title: string;

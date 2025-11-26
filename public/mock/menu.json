@@ -40,7 +40,7 @@
     "label": "Appointments",
     "icon": "CalendarOutlined",
     "path": "/appointments",
-    "component": "Appointments",
+    "component": "AppointmentPage",
     "prefetch": false,
     "authRequired": true,
     "roles": ["admin","doctor","nurse","receptionist"],

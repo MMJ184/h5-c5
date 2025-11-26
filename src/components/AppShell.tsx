@@ -101,7 +101,7 @@ export default function AppShell({ menuItems, onMenuSelect, menuSelectedKey, chi
             </Button>
 
             <Title level={5} style={{ margin: 0, color: token.colorText }}>
-              Project Dashboard
+
             </Title>
           </div>
 
