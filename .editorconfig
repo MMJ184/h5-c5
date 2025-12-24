@@ -1,12 +1,57 @@
+# This is the root EditorConfig file
 root = true
 
+##########################################################
+# GLOBAL DEFAULT SETTINGS
+##########################################################
+
 [*]
-charset = utf-8
-end_of_line = lf
-indent_style = space
-indent_size = 2
+charset = utf-8          # All files use UTF-8 encoding
+indent_style = space      # Always use spaces, not tabs
+indent_size = 2           # Standard for JS/TS/React/Tailwind
+end_of_line = lf          # Avoid CRLF issues (important for Git)
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+
+##########################################################
+# FILE-SPECIFIC RULES
+##########################################################
+
+# Markdown — allow trailing spaces because they matter in MD
 [*.md]
 trim_trailing_whitespace = false
+indent_size = 2
+
+# YAML — usually 2-space indentation
+[*.yml]
+indent_size = 2
+
+[*.yaml]
+indent_size = 2
+
+# JSON — use 2 spaces for consistency
+[*.json]
+indent_size = 2
+
+# TypeScript declaration files
+[*.d.ts]
+indent_size = 2
+
+# Scripts and configs (JS/TS config files)
+[*.{js,cjs,mjs,ts}]
+indent_size = 2
+
+# HTML / CSS
+[*.html]
+indent_size = 2
+
+[*.css]
+indent_size = 2
+
+##########################################################
+# SPECIAL CASE: Makefiles ALWAYS use tabs
+##########################################################
+
+[Makefile]
+indent_style = tab

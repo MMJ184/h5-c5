@@ -1,53 +1,51 @@
-import React from 'react';
-import { Card, Space, Tag, Tooltip, Button } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, DragOutlined } from '@ant-design/icons';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Card, Button, Space } from 'antd';
+
 import type { Appointment } from '../hooks/useAppointments';
 
-type Props = {
-  item: Appointment;
-  onEdit?: (item: Appointment) => void;
-  onDelete?: (id: string) => void;
-  onChangeStatus?: (id: string, status: Appointment['status']) => void;
-};
+interface Props {
+	item: Appointment;
+	onEdit?: (a: Appointment) => void;
+	onDelete?: (id: string) => void;
+	isOverlay?: boolean;
+}
 
-export default function AppointmentCard({ item, onEdit, onDelete }: Props) {
-  const meta = `${item.patientName}${item.time ? ` • ${item.time}` : ''}`;
+export default function AppointmentCard({ item, onEdit, onDelete, isOverlay }: Props) {
+	const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
+		id: item.id,
+		data: { type: 'card' },
+	});
 
-  return (
-    <Card
-      size="small"
-      style={{
-        marginBottom: 8,
-        borderLeft: `4px solid ${item.color ?? '#1677ff'}`,
-      }}
-      bodyStyle={{ padding: 8 }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 600 }}>{item.title}</div>
-          <div style={{ color: 'var(--antd-color-text-secondary, #666)' }}>{meta}</div>
-          {item.notes ? (
-            <div style={{ marginTop: 6, fontSize: 12, color: '#444' }}>{item.notes}</div>
-          ) : null}
-        </div>
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+		marginBottom: 8,
+		cursor: 'grab',
+		zIndex: isOverlay ? 10000 : 'auto',
+		boxShadow: isOverlay ? '0 12px 32px rgba(0,0,0,0.25)' : undefined,
+	};
 
-        <Space direction="vertical" style={{ alignItems: 'flex-end' }}>
-          <Tag>{item.status}</Tag>
-          <Space>
-            <Tooltip title="Edit">
-              <Button size="small" icon={<EditOutlined />} onClick={() => onEdit?.(item)} />
-            </Tooltip>
-            <Tooltip title="Delete">
-              <Button
-                size="small"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => onDelete?.(item.id)}
-              />
-            </Tooltip>
-          </Space>
-        </Space>
-      </div>
-    </Card>
-  );
+	return (
+		<div ref={setNodeRef} style={style} {...attributes}>
+			<Card size="small">
+				<Space direction="vertical" style={{ width: '100%' }}>
+					<Space style={{ justifyContent: 'space-between', width: '100%' }}>
+						<strong>{item.title}</strong>
+						<DragOutlined {...listeners} />
+					</Space>
+
+					<div>{item.patientName}</div>
+
+					{!isOverlay && (
+						<Space>
+							<Button size="small" icon={<EditOutlined />} onClick={() => onEdit?.(item)} />
+							<Button size="small" danger icon={<DeleteOutlined />} onClick={() => onDelete?.(item.id)} />
+						</Space>
+					)}
+				</Space>
+			</Card>
+		</div>
+	);
 }

@@ -1,53 +1,80 @@
-// src/api/ApiClient.ts
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+
+import { getTokens } from '../auth/auth.utils'; // adjust if your path differs
+
+export interface ApiError {
+	status: number;
+	message: string;
+	data?: unknown;
+}
 
 const ApiClient = axios.create({
-  baseURL: '/', // same-origin for mock files
-  timeout: 10_000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+	baseURL: import.meta.env.VITE_API_BASE_URL ?? '/', // real API later, "/" for same-origin
+	timeout: 10_000,
+	headers: { 'Content-Type': 'application/json' },
+});
+
+// ---------- AUTH HEADER ----------
+ApiClient.interceptors.request.use((config) => {
+	const tokens = getTokens?.();
+	if (tokens?.accessToken) {
+		config.headers = config.headers ?? {};
+		config.headers.Authorization = `Bearer ${tokens.accessToken}`;
+	}
+	return config;
 });
 
 // ---------- OPTIONAL MOCK INTERCEPTOR FOR DEV ----------
-// Map GET /patients => public/mock/patients.json
-ApiClient.interceptors.request.use(async (config) => {
-  if (config.method === 'get' && config.url === '/patients') {
-    const mockUrl = '/mock/patients.json';
+if (import.meta.env.DEV) {
+	ApiClient.interceptors.request.use((config) => {
+		const url = config.url ?? '';
+		if (config.method === 'get' && (url === '/patients' || url === 'patients')) {
+			const mockUrl = '/mock/patients.json';
 
-    config.adapter = async () => {
-      try {
-        const res = await fetch(mockUrl);
-        const json = await res.json();
+			config.adapter = async () => {
+				try {
+					const res = await fetch(mockUrl, { signal: config.signal as any });
+					const json = await res.json();
 
-        return {
-          data: json,
-          status: 200,
-          statusText: 'OK',
-          headers: {},
-          config,
-        };
-      } catch (e: any) {
-        return {
-          data: null,
-          status: 0,
-          statusText: e?.message ?? 'Network error',
-          headers: {},
-          config,
-        };
-      }
-    };
-  }
+					return {
+						data: json,
+						status: 200,
+						statusText: 'OK',
+						headers: {},
+						config,
+						request: null,
+					};
+				} catch (e: any) {
+					return {
+						data: null,
+						status: 0,
+						statusText: e?.message ?? 'Network error',
+						headers: {},
+						config,
+						request: null,
+					};
+				}
+			};
+		}
 
-  return config;
-});
+		return config;
+	});
+}
 
 // ---------- RESPONSE NORMALIZATION ----------
 ApiClient.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    return Promise.reject(err?.response ?? { status: 0, data: err?.message ?? 'Network error' });
-  },
+	(res) => res,
+	(err: AxiosError) => {
+		const status = err.response?.status ?? 0;
+		const data = err.response?.data;
+
+		const message =
+			(typeof data === 'object' && data && 'message' in (data as any) ? String((data as any).message) : err.message) ||
+			'Network error';
+
+		const apiErr: ApiError = { status, message, data };
+		return Promise.reject(apiErr);
+	},
 );
 
 export default ApiClient;

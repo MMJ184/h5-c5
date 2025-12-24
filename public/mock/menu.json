@@ -1,197 +1,197 @@
 [
-  {
-    "key": "dashboard",
-    "label": "Dashboard",
-    "icon": "PieChartOutlined",
-    "path": "/dashboard",
-    "component": "Dashboard",
-    "prefetch": true,
-    "authRequired": true,
-    "roles": ["admin", "doctor", "nurse", "receptionist", "billing", "pharmacy"],
-    "permissions": ["view_dashboard"],
-    "meta": { "title": "Dashboard" }
-  },
-  {
-    "key": "patients",
-    "label": "Patients",
-    "icon": "UserOutlined",
-    "path": "/patients",
-    "component": "Patients",
-    "prefetch": false,
-    "authRequired": true,
-    "roles": ["admin", "doctor", "nurse", "receptionist"],
-    "permissions": ["view_patients", "search_patients"],
-    "meta": { "title": "Patients" }
-  },
-  {
-    "key": "doctors",
-    "label": "Doctors",
-    "icon": "TeamOutlined",
-    "path": "/doctors",
-    "component": "Doctors",
-    "prefetch": false,
-    "authRequired": true,
-    "roles": ["admin", "receptionist"],
-    "permissions": ["view_doctors"],
-    "meta": { "title": "Doctors" }
-  },
-  {
-    "key": "appointments",
-    "label": "Appointments",
-    "icon": "CalendarOutlined",
-    "path": "/appointments",
-    "component": "AppointmentPage",
-    "prefetch": false,
-    "authRequired": true,
-    "roles": ["admin","doctor","nurse","receptionist"],
-    "permissions": ["view_appointments","manage_appointments"],
-    "meta": { "title": "Appointments" }
-  },
-  {
-    "key": "clinical",
-    "label": "Clinical",
-    "icon": "MedicineBoxOutlined",
-    "roles": ["admin", "doctor", "nurse", "lab"],
-    "children": [
-      {
-        "key": "clinical:vitals",
-        "label": "Vitals",
-        "path": "/clinical/vitals",
-        "component": "Vitals",
-        "prefetch": false,
-        "authRequired": true,
-        "roles": ["admin", "doctor", "nurse"],
-        "permissions": ["view_vitals"],
-        "meta": { "title": "Vitals" }
-      },
-      {
-        "key": "clinical:emr",
-        "label": "EMR",
-        "path": "/clinical/emr",
-        "component": "EMR",
-        "prefetch": false,
-        "authRequired": true,
-        "roles": ["admin", "doctor", "nurse"],
-        "permissions": ["view_emr", "edit_emr"],
-        "meta": { "title": "EMR" }
-      },
-      {
-        "key": "clinical:prescriptions",
-        "label": "Prescriptions",
-        "path": "/clinical/prescriptions",
-        "component": "Prescriptions",
-        "prefetch": false,
-        "authRequired": true,
-        "roles": ["admin", "doctor", "pharmacy"],
-        "permissions": ["create_prescription", "view_prescription"],
-        "meta": { "title": "Prescriptions" }
-      },
-      {
-        "key": "clinical:lab",
-        "label": "Lab Results",
-        "path": "/clinical/lab",
-        "component": "LabResults",
-        "prefetch": false,
-        "authRequired": true,
-        "roles": ["admin", "doctor", "lab"],
-        "permissions": ["view_lab_results", "upload_lab_results"],
-        "meta": { "title": "Lab Results" }
-      }
-    ]
-  },
-  {
-    "key": "billing",
-    "label": "Billing",
-    "icon": "WalletOutlined",
-    "roles": ["admin", "billing"],
-    "children": [
-      {
-        "key": "billing:invoices",
-        "label": "Invoices",
-        "path": "/billing/invoices",
-        "component": "Invoices",
-        "meta": { "title": "Invoices" },
-        "authRequired": true,
-        "roles": ["admin", "billing"],
-        "permissions": ["view_invoices", "create_invoices"]
-      },
-      {
-        "key": "billing:insurance",
-        "label": "Insurance",
-        "path": "/billing/insurance",
-        "component": "Insurance",
-        "meta": { "title": "Insurance" },
-        "authRequired": true,
-        "roles": ["admin", "billing"],
-        "permissions": ["view_insurance"]
-      }
-    ]
-  },
-  {
-    "key": "reports",
-    "label": "Reports",
-    "icon": "BarChartOutlined",
-    "path": "/reports",
-    "component": "Reports",
-    "meta": { "title": "Reports" },
-    "authRequired": true,
-    "roles": ["admin", "doctor", "nurse", "billing"],
-    "permissions": ["view_reports"]
-  },
-  {
-    "key": "admin",
-    "label": "Admin",
-    "icon": "SettingOutlined",
-    "roles": ["admin"],
-    "children": [
-      {
-        "key": "admin:users",
-        "label": "User Management",
-        "path": "/admin/users",
-        "component": "UsersManagement",
-        "meta": { "title": "User Management" },
-        "authRequired": true,
-        "roles": ["admin"],
-        "permissions": ["manage_users"]
-      },
-      {
-        "key": "admin:roles",
-        "label": "Roles & Permissions",
-        "path": "/admin/roles",
-        "component": "RolesPermissions",
-        "meta": { "title": "Roles & Permissions" },
-        "authRequired": true,
-        "roles": ["admin"],
-        "permissions": ["manage_roles"]
-      },
-      {
-        "key": "admin:system",
-        "label": "System Settings",
-        "path": "/admin/system",
-        "component": "SystemSettings",
-        "meta": { "title": "System Settings" },
-        "authRequired": true,
-        "roles": ["admin"],
-        "permissions": ["manage_system"]
-      }
-    ]
-  },
-  {
-    "key": "login",
-    "label": "Login",
-    "icon": "UserOutlined",
-    "path": "/login",
-    "component": "Login",
-    "prefetch": false,
-    "authRequired": false,
-    "meta": { "title": "Login" }
-  },
-  {
-    "key": "notfound",
-    "label": "NotFound",
-    "path": "*",
-    "component": "NotFound",
-    "prefetch": false,
-    "authRequired": false
-  }
+	{
+		"key": "dashboard",
+		"label": "Dashboard",
+		"icon": "PieChartOutlined",
+		"path": "/dashboard",
+		"component": "DashboardBuilder",
+		"prefetch": true,
+		"authRequired": true,
+		"roles": ["admin", "doctor", "nurse", "receptionist", "billing", "pharmacy"],
+		"permissions": ["view_dashboard"],
+		"meta": { "title": "Dashboard" }
+	},
+	{
+		"key": "patients",
+		"label": "Patients",
+		"icon": "UserOutlined",
+		"path": "/patients",
+		"component": "Patients",
+		"prefetch": false,
+		"authRequired": true,
+		"roles": ["admin", "doctor", "nurse", "receptionist"],
+		"permissions": ["view_patients", "search_patients"],
+		"meta": { "title": "Patients" }
+	},
+	{
+		"key": "doctors",
+		"label": "Doctors",
+		"icon": "TeamOutlined",
+		"path": "/doctors",
+		"component": "Doctors",
+		"prefetch": false,
+		"authRequired": true,
+		"roles": ["admin", "receptionist"],
+		"permissions": ["view_doctors"],
+		"meta": { "title": "Doctors" }
+	},
+	{
+		"key": "appointments",
+		"label": "Appointments",
+		"icon": "CalendarOutlined",
+		"path": "/appointments",
+		"component": "AppointmentPage",
+		"prefetch": false,
+		"authRequired": true,
+		"roles": ["admin", "doctor", "nurse", "receptionist"],
+		"permissions": ["view_appointments", "manage_appointments"],
+		"meta": { "title": "Appointments" }
+	},
+	{
+		"key": "clinical",
+		"label": "Clinical",
+		"icon": "MedicineBoxOutlined",
+		"roles": ["admin", "doctor", "nurse", "lab"],
+		"children": [
+			{
+				"key": "clinical:vitals",
+				"label": "Vitals",
+				"path": "/clinical/vitals",
+				"component": "Vitals",
+				"prefetch": false,
+				"authRequired": true,
+				"roles": ["admin", "doctor", "nurse"],
+				"permissions": ["view_vitals"],
+				"meta": { "title": "Vitals" }
+			},
+			{
+				"key": "clinical:emr",
+				"label": "EMR",
+				"path": "/clinical/emr",
+				"component": "EMR",
+				"prefetch": false,
+				"authRequired": true,
+				"roles": ["admin", "doctor", "nurse"],
+				"permissions": ["view_emr", "edit_emr"],
+				"meta": { "title": "EMR" }
+			},
+			{
+				"key": "clinical:prescriptions",
+				"label": "Prescriptions",
+				"path": "/clinical/prescriptions",
+				"component": "Prescriptions",
+				"prefetch": false,
+				"authRequired": true,
+				"roles": ["admin", "doctor", "pharmacy"],
+				"permissions": ["create_prescription", "view_prescription"],
+				"meta": { "title": "Prescriptions" }
+			},
+			{
+				"key": "clinical:lab",
+				"label": "Lab Results",
+				"path": "/clinical/lab",
+				"component": "LabResults",
+				"prefetch": false,
+				"authRequired": true,
+				"roles": ["admin", "doctor", "lab"],
+				"permissions": ["view_lab_results", "upload_lab_results"],
+				"meta": { "title": "Lab Results" }
+			}
+		]
+	},
+	{
+		"key": "billing",
+		"label": "Billing",
+		"icon": "WalletOutlined",
+		"roles": ["admin", "billing"],
+		"children": [
+			{
+				"key": "billing:invoices",
+				"label": "Invoices",
+				"path": "/billing/invoices",
+				"component": "Invoices",
+				"meta": { "title": "Invoices" },
+				"authRequired": true,
+				"roles": ["admin", "billing"],
+				"permissions": ["view_invoices", "create_invoices"]
+			},
+			{
+				"key": "billing:insurance",
+				"label": "Insurance",
+				"path": "/billing/insurance",
+				"component": "Insurance",
+				"meta": { "title": "Insurance" },
+				"authRequired": true,
+				"roles": ["admin", "billing"],
+				"permissions": ["view_insurance"]
+			}
+		]
+	},
+	{
+		"key": "reports",
+		"label": "Reports",
+		"icon": "BarChartOutlined",
+		"path": "/reports",
+		"component": "Reports",
+		"meta": { "title": "Reports" },
+		"authRequired": true,
+		"roles": ["admin", "doctor", "nurse", "billing"],
+		"permissions": ["view_reports"]
+	},
+	{
+		"key": "admin",
+		"label": "Admin",
+		"icon": "SettingOutlined",
+		"roles": ["admin"],
+		"children": [
+			{
+				"key": "admin:users",
+				"label": "User Management",
+				"path": "/admin/users",
+				"component": "UsersManagement",
+				"meta": { "title": "User Management" },
+				"authRequired": true,
+				"roles": ["admin"],
+				"permissions": ["manage_users"]
+			},
+			{
+				"key": "admin:roles",
+				"label": "Roles & Permissions",
+				"path": "/admin/roles",
+				"component": "RolesPermissions",
+				"meta": { "title": "Roles & Permissions" },
+				"authRequired": true,
+				"roles": ["admin"],
+				"permissions": ["manage_roles"]
+			},
+			{
+				"key": "admin:system",
+				"label": "System Settings",
+				"path": "/admin/system",
+				"component": "SystemSettings",
+				"meta": { "title": "System Settings" },
+				"authRequired": true,
+				"roles": ["admin"],
+				"permissions": ["manage_system"]
+			}
+		]
+	},
+	{
+		"key": "login",
+		"label": "Login",
+		"icon": "UserOutlined",
+		"path": "/login",
+		"component": "Login",
+		"prefetch": false,
+		"authRequired": false,
+		"meta": { "title": "Login" }
+	},
+	{
+		"key": "notfound",
+		"label": "NotFound",
+		"path": "*",
+		"component": "NotFound",
+		"prefetch": false,
+		"authRequired": false
+	}
 ]
