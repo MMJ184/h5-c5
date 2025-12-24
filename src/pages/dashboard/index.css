@@ -1,0 +1,36 @@
+:root {
+	--grid-line-color: rgba(0, 0, 0, 0.12);
+	--row-height: 30px;
+	--col-width: 80px;
+}
+
+html.dark,
+[data-theme='dark'] {
+	--grid-line-color: rgba(255, 255, 255, 0.16);
+}
+
+.dashboard-grid-layout.editing {
+	background-size: var(--col-width) var(--row-height);
+	background-image:
+		linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
+}
+
+.rgl-drag-preview {
+	position: absolute;
+	background: rgba(22, 119, 255, 0.15);
+	border: 1px dashed rgba(22, 119, 255, 0.9);
+	border-radius: 6px;
+	pointer-events: none;
+	z-index: 9999;
+	transition: 0.1s ease-out;
+}
+
+.drawer-widget-draggable {
+	padding: 10px;
+	border-radius: 6px;
+	transition: 0.2s;
+}
+.drawer-widget-draggable:hover {
+	background: rgba(0, 0, 0, 0.05);
+}

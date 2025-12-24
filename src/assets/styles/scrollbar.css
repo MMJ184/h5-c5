@@ -1,0 +1,59 @@
+/* =====================================================
+   PREMIUM SLIM SCROLLBAR – AntD / Enterprise UI
+   ===================================================== */
+
+/* Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* thumb – hidden by default */
+::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 0, 0, 0.25);
+	border-radius: 999px;
+	opacity: 0;
+	transition:
+		opacity 0.25s ease,
+		background-color 0.25s ease;
+}
+
+/* show scrollbar on hover / scroll */
+:hover::-webkit-scrollbar-thumb,
+:active::-webkit-scrollbar-thumb {
+	opacity: 1;
+}
+
+/* hover highlight */
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(0, 0, 0, 0.45);
+}
+
+/* ---------------- DARK MODE ---------------- */
+
+body.ant-theme-dark ::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0.25);
+}
+
+body.ant-theme-dark ::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(255, 255, 255, 0.45);
+}
+
+/* ---------------- TOUCH DEVICES ---------------- */
+
+/* Don't force scrollbar on mobile */
+@media (pointer: coarse) {
+	::-webkit-scrollbar {
+		display: none;
+	}
+}
