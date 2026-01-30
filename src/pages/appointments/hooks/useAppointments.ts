@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { message } from 'antd';
+import { useCallback } from 'react';
 
 import appointmentApi, { type AppointmentPayload } from '../api/appointmentApi';
 
@@ -14,114 +16,227 @@ export interface Appointment {
 	color?: string;
 }
 
+/* Query Keys */
+const APPOINTMENTS_QUERY_KEY = ['appointments'] as const;
+
+/* Temporary Dummy Data */
+const DUMMY_APPOINTMENTS: Appointment[] = [
+	{
+		id: 'appt_1',
+		title: 'General Checkup',
+		patientName: 'John Doe',
+		date: '2026-02-01',
+		time: '09:00',
+		status: 'pending',
+		durationMinutes: 30,
+		notes: 'Annual health checkup',
+	},
+	{
+		id: 'appt_2',
+		title: 'Dental Cleaning',
+		patientName: 'Jane Smith',
+		date: '2026-02-01',
+		time: '10:30',
+		status: 'confirmed',
+		durationMinutes: 45,
+	},
+	{
+		id: 'appt_3',
+		title: 'Eye Examination',
+		patientName: 'Bob Johnson',
+		date: '2026-02-02',
+		time: '14:00',
+		status: 'confirmed',
+		durationMinutes: 60,
+		notes: 'Vision test and prescription update',
+	},
+	{
+		id: 'appt_4',
+		title: 'Physical Therapy',
+		patientName: 'Alice Williams',
+		date: '2026-02-03',
+		time: '11:00',
+		status: 'completed',
+		durationMinutes: 60,
+	},
+	{
+		id: 'appt_5',
+		title: 'Blood Test',
+		patientName: 'Charlie Brown',
+		date: '2026-02-04',
+		time: '08:00',
+		status: 'cancelled',
+		durationMinutes: 15,
+		notes: 'Patient requested cancellation',
+	},
+	{
+		id: 'appt_6',
+		title: 'Cardiology Consultation',
+		patientName: 'David Miller',
+		date: '2026-02-05',
+		time: '15:30',
+		status: 'pending',
+		durationMinutes: 45,
+	},
+	{
+		id: 'appt_7',
+		title: 'X-Ray Scan',
+		patientName: 'Emma Davis',
+		date: '2026-02-06',
+		time: '13:00',
+		status: 'confirmed',
+		durationMinutes: 30,
+	},
+	{
+		id: 'appt_8',
+		title: 'Follow-up Visit',
+		patientName: 'Frank Wilson',
+		date: '2026-02-07',
+		time: '10:00',
+		status: 'completed',
+		durationMinutes: 30,
+		notes: 'Post-surgery follow-up',
+	},
+];
+
 export default function useAppointments() {
-	const [appointments, setAppointments] = useState<Appointment[]>([]);
-	const [loading, setLoading] = useState(false);
+	const queryClient = useQueryClient();
 
-	/* 🧪 TEMP DUMMY DATA */
-	const DUMMY_APPOINTMENTS: Appointment[] = [
-		{
-			id: 'appt_1',
-			title: 'General Checkup',
-			patientName: 'John Doe',
-			date: '2026-01-12',
-			time: '10:30',
-			status: 'confirmed',
-			durationMinutes: 30,
-		},
-		{
-			id: 'appt_2',
-			title: 'Dental Cleaning',
-			patientName: 'Priya Sharma',
-			date: '2026-01-12',
-			time: '14:00',
-			status: 'pending',
-			durationMinutes: 45,
-		},
-		{
-			id: 'appt_3',
-			title: 'Eye Checkup',
-			patientName: 'Rahul Mehta',
-			date: '2026-01-13',
-			time: '09:00',
-			status: 'completed',
-			durationMinutes: 20,
-		},
-		{
-			id: 'appt_4',
-			title: 'Skin Consultation',
-			patientName: 'Mira Patel',
-			date: '2026-01-15',
-			time: '16:00',
-			status: 'cancelled',
-			durationMinutes: 25,
-		},
-	];
-
-	/* 🔁 Load (used only on page load / manual refresh) */
-	const reload = useCallback(async () => {
-		setLoading(true);
-		try {
-			// 🔁 TEMP: dummy
-			setAppointments(DUMMY_APPOINTMENTS);
-
-			// 🔜 REAL API
-			// const res = await appointmentApi.list();
-			// setAppointments(res.data);
-		} finally {
-			setLoading(false);
-		}
-	}, []);
-
-	/* 🟢 CREATE */
-	const createAppointment = useCallback(async (payload: AppointmentPayload) => {
-		const res = await appointmentApi.create(payload);
-		setAppointments((prev) => [...prev, res.data]);
-	}, []);
-
-	/* ✏️ UPDATE (edit modal) */
-	const updateAppointment = useCallback(async (id: string, payload: Partial<AppointmentPayload>) => {
-		const res = await appointmentApi.update(id, payload);
-		setAppointments((prev) => prev.map((a) => (a.id === id ? res.data : a)));
-	}, []);
-
-	/* 🔴 DELETE */
-	const deleteAppointment = useCallback(async (id: string) => {
-		await appointmentApi.remove(id);
-		setAppointments((prev) => prev.filter((a) => a.id !== id));
-	}, []);
-
-	/* 🔁 STATUS UPDATE (KANBAN ONLY) */
-	const updateStatus = useCallback(
-		async (id: string, status: Appointment['status']) => {
-			const previous = [...appointments];
-
-			/* optimistic */
-			setAppointments((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)));
-
+	/* ---------- FETCH APPOINTMENTS ---------- */
+	const { data: appointments = [], isLoading: loading } = useQuery({
+		queryKey: APPOINTMENTS_QUERY_KEY,
+		queryFn: async () => {
 			try {
-				await appointmentApi.update(id, { status });
+				return await appointmentApi.getAll();
 			} catch (err) {
-				/* rollback */
-				setAppointments(previous);
-				throw err;
+				console.warn('API failed, using dummy data:', err);
+				return DUMMY_APPOINTMENTS;
 			}
 		},
-		[appointments],
+		staleTime: 1000 * 60 * 5, // 5 minutes
+		refetchOnWindowFocus: true,
+	});
+
+	/* ---------- CREATE APPOINTMENT ---------- */
+	const createMutation = useMutation({
+		mutationFn: (payload: AppointmentPayload) => appointmentApi.create(payload),
+		onMutate: async (newAppointment) => {
+			// Cancel outgoing refetches
+			await queryClient.cancelQueries({ queryKey: APPOINTMENTS_QUERY_KEY });
+
+			// Snapshot previous value
+			const previousAppointments = queryClient.getQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY);
+
+			// Optimistically update
+			const optimisticAppointment: Appointment = {
+				id: `temp_${Date.now()}`,
+				...newAppointment,
+			};
+			queryClient.setQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY, (old = []) => [
+				...old,
+				optimisticAppointment,
+			]);
+
+			return { previousAppointments };
+		},
+		onError: (err, newAppointment, context) => {
+			// Rollback on error
+			if (context?.previousAppointments) {
+				queryClient.setQueryData(APPOINTMENTS_QUERY_KEY, context.previousAppointments);
+			}
+			message.error('Failed to create appointment');
+			console.error(err);
+		},
+		onSuccess: () => {
+			message.success('Appointment created successfully');
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: APPOINTMENTS_QUERY_KEY });
+		},
+	});
+
+	/* ---------- UPDATE APPOINTMENT ---------- */
+	const updateMutation = useMutation({
+		mutationFn: ({ id, data }: { id: string; data: Partial<AppointmentPayload> }) =>
+			appointmentApi.update(id, data),
+		onMutate: async ({ id, data }) => {
+			await queryClient.cancelQueries({ queryKey: APPOINTMENTS_QUERY_KEY });
+			const previousAppointments = queryClient.getQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY);
+
+			queryClient.setQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY, (old = []) =>
+				old.map((appt) => (appt.id === id ? { ...appt, ...data } : appt)),
+			);
+
+			return { previousAppointments };
+		},
+		onError: (err, variables, context) => {
+			if (context?.previousAppointments) {
+				queryClient.setQueryData(APPOINTMENTS_QUERY_KEY, context.previousAppointments);
+			}
+			message.error('Failed to update appointment');
+			console.error(err);
+		},
+		onSuccess: () => {
+			message.success('Appointment updated successfully');
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: APPOINTMENTS_QUERY_KEY });
+		},
+	});
+
+	/* ---------- DELETE APPOINTMENT ---------- */
+	const deleteMutation = useMutation({
+		mutationFn: (id: string) => appointmentApi.delete(id),
+		onMutate: async (id) => {
+			await queryClient.cancelQueries({ queryKey: APPOINTMENTS_QUERY_KEY });
+			const previousAppointments = queryClient.getQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY);
+
+			queryClient.setQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY, (old = []) =>
+				old.filter((appt) => appt.id !== id),
+			);
+
+			return { previousAppointments };
+		},
+		onError: (err, id, context) => {
+			if (context?.previousAppointments) {
+				queryClient.setQueryData(APPOINTMENTS_QUERY_KEY, context.previousAppointments);
+			}
+			message.error('Failed to delete appointment');
+			console.error(err);
+		},
+		onSuccess: () => {
+			message.success('Appointment deleted successfully');
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: APPOINTMENTS_QUERY_KEY });
+		},
+	});
+
+	/* ---------- UPDATE STATUS (FOR KANBAN) ---------- */
+	const updateStatus = useCallback(
+		async (id: string, status: Appointment['status']) => {
+			await updateMutation.mutateAsync({ id, data: { status } });
+		},
+		[updateMutation],
 	);
 
-	useEffect(() => {
-		reload();
-	}, [reload]);
+	/* ---------- MANUAL RELOAD ---------- */
+	const reload = useCallback(() => {
+		queryClient.invalidateQueries({ queryKey: APPOINTMENTS_QUERY_KEY });
+	}, [queryClient]);
 
 	return {
 		appointments,
 		loading,
-		reload, // manual refresh only
-		setAppointments, // needed for Kanban
-		createAppointment,
-		updateAppointment,
-		deleteAppointment,
-		updateStatus, // 🔑 Kanban uses this
+		reload,
+		createAppointment: createMutation.mutateAsync,
+		updateAppointment: (id: string, data: Partial<AppointmentPayload>) =>
+			updateMutation.mutateAsync({ id, data }),
+		deleteAppointment: deleteMutation.mutateAsync,
+		updateStatus,
+		// Mutation states
+		isCreating: createMutation.isPending,
+		isUpdating: updateMutation.isPending,
+		isDeleting: deleteMutation.isPending,
 	};
 }

@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import * as ReactDOM from 'react-dom';
 
 import 'react-quill/dist/quill.snow.css';
 
@@ -29,10 +28,6 @@ export default function RichTextEditor({
 	const [Quill, setQuill] = useState<React.ComponentType<any> | null>(null);
 
 	useEffect(() => {
-		if (!(ReactDOM as any).findDOMNode) {
-			(ReactDOM as any).findDOMNode = (node: any) => node;
-		}
-
 		let mounted = true;
 		import('react-quill')
 			.then((mod) => {
