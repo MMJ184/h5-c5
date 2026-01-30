@@ -25,3 +25,53 @@ body,
 
 /* when antd's dark algorithm is applied, some colors are derived automatically.
    We keep these CSS variables conservative; ConfigProvider tokens will do the heavy lifting. */
+/* =========================
+   React Quill (Light/Dark)
+========================= */
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.ql-toolbar.ql-snow {
+  background: #ffffff;
+  border-bottom: none;
+}
+
+.ql-container.ql-snow {
+  background: #ffffff;
+}
+
+.ql-editor {
+  font-size: inherit;
+  line-height: 1.6;
+}
+
+body.ant-theme-dark .ql-toolbar.ql-snow,
+body.ant-theme-dark .ql-container.ql-snow {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+body.ant-theme-dark .ql-toolbar.ql-snow {
+  background: #141414;
+}
+
+body.ant-theme-dark .ql-container.ql-snow {
+  background: #141414;
+  color: #ffffff;
+}
+
+body.ant-theme-dark .ql-snow .ql-stroke {
+  stroke: #d9d9d9;
+}
+
+body.ant-theme-dark .ql-snow .ql-fill,
+body.ant-theme-dark .ql-snow .ql-stroke.ql-fill {
+  fill: #d9d9d9;
+}
+
+body.ant-theme-dark .ql-snow .ql-picker,
+body.ant-theme-dark .ql-snow .ql-picker-label,
+body.ant-theme-dark .ql-snow .ql-picker-item {
+  color: #d9d9d9;
+}

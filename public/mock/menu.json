@@ -139,6 +139,75 @@
 		"permissions": ["view_reports"]
 	},
 	{
+		"key": "hr",
+		"label": "HR",
+		"icon": "TeamOutlined",
+		"roles": ["admin", "hr", "manager", "employee"],
+		"children": [
+			{
+				"key": "hr:leaves:calendar",
+				"label": "Leave Calendar",
+				"path": "/hr/leaves/calendar",
+				"component": "LeaveCalendar",
+				"prefetch": false,
+				"authRequired": true,
+				"permissions": ["leave_calendar_view"],
+				"meta": { "title": "Leave Calendar" }
+			},
+			{
+				"key": "hr:leaves:apply",
+				"label": "Apply Leave",
+				"path": "/hr/leaves/apply",
+				"component": "LeaveApply",
+				"prefetch": false,
+				"authRequired": true,
+				"permissions": ["leave_apply"],
+				"meta": { "title": "Apply Leave" }
+			},
+			{
+				"key": "hr:leaves:my-requests",
+				"label": "My Requests",
+				"path": "/hr/leaves/my-requests",
+				"component": "LeaveMyRequests",
+				"prefetch": false,
+				"authRequired": true,
+				"permissions": ["leave_requests_view"],
+				"meta": { "title": "My Leave Requests" }
+			},
+			{
+				"key": "hr:leaves:approvals",
+				"label": "Approvals",
+				"path": "/hr/leaves/approvals",
+				"component": "LeaveApprovals",
+				"prefetch": false,
+				"authRequired": true,
+				"permissions": ["leave_approvals_view"],
+				"meta": { "title": "Leave Approvals" }
+			},
+			{
+				"key": "hr:leaves:policies",
+				"label": "Policies",
+				"path": "/hr/leaves/policies",
+				"component": "LeavePolicies",
+				"prefetch": false,
+				"authRequired": true,
+				"permissions": ["leave_policies_manage"],
+				"meta": { "title": "Leave Policies" }
+			},
+			{
+				"key": "hr:broadcast",
+				"label": "Broadcast",
+				"path": "/hr/broadcast",
+				"component": "HrBroadcast",
+				"prefetch": false,
+				"authRequired": true,
+				"permissions": ["hr_broadcast_manage"],
+				"icon": "SoundOutlined",
+				"meta": { "title": "HR Broadcast" }
+			}
+		]
+	},
+	{
 		"key": "admin",
 		"label": "Admin",
 		"icon": "SettingOutlined",

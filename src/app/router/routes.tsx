@@ -63,6 +63,82 @@ export const appointmentsRoute = createRoute({
 	path: '/appointments',
 	component: lazyRouteComponent(() => import('../../pages/appointments')),
 });
+
+/* =========================================================
+   HR Leaves
+========================================================= */
+
+export const leaveCalendarRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/hr/leaves/calendar',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			authRequired: true,
+			permissions: ['leave_calendar_view'],
+		});
+	},
+	component: lazyRouteComponent(() => import('../../pages/hr/leaves/calendar')),
+});
+
+export const leaveApplyRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/hr/leaves/apply',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			authRequired: true,
+			permissions: ['leave_apply'],
+		});
+	},
+	component: lazyRouteComponent(() => import('../../pages/hr/leaves/apply')),
+});
+
+export const leaveMyRequestsRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/hr/leaves/my-requests',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			authRequired: true,
+			permissions: ['leave_requests_view'],
+		});
+	},
+	component: lazyRouteComponent(() => import('../../pages/hr/leaves/my-requests')),
+});
+
+export const leaveApprovalsRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/hr/leaves/approvals',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			authRequired: true,
+			permissions: ['leave_approvals_view'],
+		});
+	},
+	component: lazyRouteComponent(() => import('../../pages/hr/leaves/approvals')),
+});
+
+export const leavePoliciesRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/hr/leaves/policies',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			authRequired: true,
+			permissions: ['leave_policies_manage'],
+		});
+	},
+	component: lazyRouteComponent(() => import('../../pages/hr/leaves/policies')),
+});
+
+export const hrBroadcastRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/hr/broadcast',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			authRequired: true,
+			permissions: ['hr_broadcast_manage'],
+		});
+	},
+	component: lazyRouteComponent(() => import('../../pages/hr/broadcast')),
+});
 //
 // export const reportsRoute = createRoute({
 //     getParentRoute: () => rootRoute,
@@ -163,6 +239,12 @@ export const routeTree = rootRoute.addChildren([
 	doctorsRoute,
 	loginRoute,
 	appointmentsRoute,
+	leaveCalendarRoute,
+	leaveApplyRoute,
+	leaveMyRequestsRoute,
+	leaveApprovalsRoute,
+	leavePoliciesRoute,
+	hrBroadcastRoute,
 	//
 	// clinicalVitalsRoute,
 	// clinicalEmrRoute,

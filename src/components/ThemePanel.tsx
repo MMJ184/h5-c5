@@ -6,6 +6,10 @@ import {
 	ExperimentOutlined,
 	BulbOutlined,
 	ReloadOutlined,
+	CheckOutlined,
+	EditOutlined,
+	MoonOutlined,
+	SunOutlined,
 } from '@ant-design/icons';
 import {
 	Drawer,
@@ -13,7 +17,7 @@ import {
 	Row,
 	Col,
 	Button,
-	Radio,
+	Segmented,
 	Input,
 	Divider,
 	Tooltip,
@@ -21,6 +25,9 @@ import {
 	Card,
 	ColorPicker,
 	theme as antdTheme,
+	Tag,
+	Switch,
+	Slider,
 } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -45,7 +52,18 @@ const DEFAULT_PRIMARY = '#1677ff';
 
 export default function ThemePanel({ open, onClose }: Props) {
 	const { token } = antdTheme.useToken();
-	const { dark, toggleDark, primary, setPrimary } = useTheme();
+	const {
+		dark,
+		toggleDark,
+		primary,
+		setPrimary,
+		compact,
+		toggleCompact,
+		fontScale,
+		setFontScale,
+		highContrast,
+		toggleHighContrast,
+	} = useTheme();
 
 	// Local (preview) state
 	const [draftPrimary, setDraftPrimary] = useState(primary);
@@ -73,7 +91,7 @@ export default function ThemePanel({ open, onClose }: Props) {
 			title={
 				<Space>
 					<BgColorsOutlined />
-					<span>Theme Settings</span>
+					<span>Theme Studio</span>
 				</Space>
 			}
 			placement="right"
@@ -91,8 +109,10 @@ export default function ThemePanel({ open, onClose }: Props) {
 					</Button>
 
 					<Space>
-						<Button onClick={onClose}>Cancel</Button>
-						<Button type="primary" onClick={applyTheme}>
+						<Button icon={<EditOutlined />} onClick={onClose}>
+							Cancel
+						</Button>
+						<Button type="primary" icon={<CheckOutlined />} onClick={applyTheme}>
 							Apply
 						</Button>
 					</Space>
@@ -101,7 +121,7 @@ export default function ThemePanel({ open, onClose }: Props) {
 		>
 			<Space orientation="vertical" size="large" style={{ width: '100%' }}>
 				{/* ================= MODE ================= */}
-				<Card size="small">
+				<Card size="small" style={{ borderRadius: 12 }}>
 					<Row justify="space-between" align="middle">
 						<Col>
 							<Title level={5} style={{ margin: 0 }}>
@@ -110,27 +130,24 @@ export default function ThemePanel({ open, onClose }: Props) {
 							<Text type="secondary">Light or dark mode</Text>
 						</Col>
 						<Col>
-							<Radio.Group
+							<Segmented
 								value={dark ? 'dark' : 'light'}
-								onChange={(e) => {
-									if (e.target.value === 'dark' && !dark) toggleDark();
-									if (e.target.value === 'light' && dark) toggleDark();
+								onChange={(value) => {
+									if (value === 'dark' && !dark) toggleDark();
+									if (value === 'light' && dark) toggleDark();
 								}}
-							>
-								<Radio.Button value="light">
-									<BulbOutlined /> Light
-								</Radio.Button>
-								<Radio.Button value="dark">
-									<BgColorsOutlined /> Dark
-								</Radio.Button>
-							</Radio.Group>
+								options={[
+									{ label: 'Light', value: 'light', icon: <SunOutlined /> },
+									{ label: 'Dark', value: 'dark', icon: <MoonOutlined /> },
+								]}
+							/>
 						</Col>
 					</Row>
 				</Card>
 
 				{/* ================= PRIMARY COLOR ================= */}
-				<Card size="small">
-					<Title level={5} style={{ marginBottom: 8 }}>
+				<Card size="small" style={{ borderRadius: 12 }}>
+					<Title level={5} style={{ marginBottom: 4 }}>
 						Primary Color
 					</Title>
 					<Text type="secondary">Choose a preset or customize your brand color</Text>
@@ -155,6 +172,7 @@ export default function ThemePanel({ open, onClose }: Props) {
 													alignItems: 'center',
 													gap: 12,
 													border: active ? `2px solid ${p.color}` : `1px solid ${token.colorBorder}`,
+													borderRadius: 10,
 												},
 											}}
 										>
@@ -164,15 +182,16 @@ export default function ThemePanel({ open, onClose }: Props) {
 													height: 32,
 													borderRadius: 8,
 													background: p.color,
+													boxShadow: `0 6px 16px ${p.color}40`,
 												}}
 											/>
 											<div>
 												<Text strong>{p.label}</Text>
 												{active && (
 													<div>
-														<Text type="success" style={{ fontSize: 12 }}>
+														<Tag color="success" style={{ marginTop: 4 }}>
 															Active
-														</Text>
+														</Tag>
 													</div>
 												)}
 											</div>
@@ -187,14 +206,23 @@ export default function ThemePanel({ open, onClose }: Props) {
 
 					{/* Custom Picker */}
 					<Space direction="vertical" style={{ width: '100%' }}>
-						<ColorPicker value={draftPrimary} onChange={(color) => setDraftPrimary(color.toHexString())} showText />
+						<ColorPicker
+							value={draftPrimary}
+							onChange={(color) => setDraftPrimary(color.toHexString())}
+							showText
+						/>
 
-						<Input value={draftPrimary} onChange={(e) => setDraftPrimary(e.target.value)} placeholder="#1677ff" />
+						<Input
+							value={draftPrimary}
+							onChange={(e) => setDraftPrimary(e.target.value)}
+							placeholder="#1677ff"
+							prefix={<BulbOutlined />}
+						/>
 					</Space>
 				</Card>
 
 				{/* ================= LIVE PREVIEW ================= */}
-				<Card size="small">
+				<Card size="small" style={{ borderRadius: 12 }}>
 					<Title level={5} style={{ marginBottom: 8 }}>
 						Preview
 					</Title>
@@ -220,20 +248,39 @@ export default function ThemePanel({ open, onClose }: Props) {
 				</Card>
 
 				{/* ================= ACCESSIBILITY PLACEHOLDER ================= */}
-				<Card size="small">
+				<Card size="small" style={{ borderRadius: 12 }}>
 					<Title level={5} style={{ marginBottom: 8 }}>
 						Accessibility & UI
 					</Title>
-					<Text type="secondary">More options can be added here (compact mode, font scale, contrast).</Text>
+					<Text type="secondary">Customize density, typography, and contrast for better readability.</Text>
 
 					<Divider />
 
-					<Row justify="space-between" align="middle">
-						<Text>Compact spacing</Text>
-						<Button size="small" disabled>
-							Coming soon
-						</Button>
-					</Row>
+					<Space direction="vertical" style={{ width: '100%' }} size="middle">
+						<Row justify="space-between" align="middle">
+							<Text>Compact spacing</Text>
+							<Switch checked={compact} onChange={toggleCompact} />
+						</Row>
+
+						<div>
+							<Row justify="space-between" align="middle">
+								<Text>Font scale</Text>
+								<Tag>{fontScale.toFixed(2)}x</Tag>
+							</Row>
+							<Slider
+								min={0.85}
+								max={1.25}
+								step={0.05}
+								value={fontScale}
+								onChange={(value) => setFontScale(Number(value))}
+							/>
+						</div>
+
+						<Row justify="space-between" align="middle">
+							<Text>High contrast</Text>
+							<Switch checked={highContrast} onChange={toggleHighContrast} />
+						</Row>
+					</Space>
 				</Card>
 			</Space>
 		</Drawer>

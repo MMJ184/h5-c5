@@ -1,10 +1,12 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined, BgColorsOutlined } from '@ant-design/icons';
+import { BellOutlined, MenuFoldOutlined, MenuUnfoldOutlined, BgColorsOutlined } from '@ant-design/icons';
 import { Outlet, useRouter, useRouterState } from '@tanstack/react-router';
-import { Button, Layout, Space, Typography, theme as antdTheme } from 'antd';
+import { Badge, Button, Layout, Space, Typography, theme as antdTheme } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 import { useTheme } from '../../app/providers/ThemeProvider';
 import MenuPrefetcher from '../../app/router/MenuPrefetcher.tsx';
+import NotificationPanel from '../../components/NotificationPanel';
+import { useNotifications } from '../../app/providers/NotificationProvider';
 import ThemePanel from '../../components/ThemePanel';
 import { findItemByKey, findKeyByPath } from '../../navigation/menuHelpers.ts';
 import { useMenu } from '../../navigation/useMenu.ts';
@@ -49,6 +51,8 @@ export default function MainLayout() {
 
 	/* ---------------- theme panel ---------------- */
 	const [themeOpen, setThemeOpen] = useState(false);
+	const [notificationOpen, setNotificationOpen] = useState(false);
+	const { notifications, markAllRead, markRead } = useNotifications();
 
 	useEffect(() => {
 		const mq = window.matchMedia(`(max-width: ${BREAKPOINT_PX}px)`);
@@ -128,6 +132,23 @@ export default function MainLayout() {
 
 						<Space align="center">
 							<Button
+								type="text"
+								aria-label="Open notifications"
+								onClick={() => setNotificationOpen(true)}
+								style={{
+									height: 40,
+									width: 40,
+									display: 'inline-flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+									borderRadius: 8,
+								}}
+							>
+								<Badge count={notifications.filter((n) => !n.read).length} size="small">
+									<BellOutlined style={{ fontSize: 18, color: token.colorText }} />
+								</Badge>
+							</Button>
+							<Button
 								type="default"
 								icon={<BgColorsOutlined />}
 								onClick={() => setThemeOpen(true)}
@@ -147,6 +168,13 @@ export default function MainLayout() {
 				</Layout>
 
 				<ThemePanel open={themeOpen} onClose={() => setThemeOpen(false)} />
+				<NotificationPanel
+					open={notificationOpen}
+					onClose={() => setNotificationOpen(false)}
+					notifications={notifications}
+					onMarkAllRead={markAllRead}
+					onMarkRead={markRead}
+				/>
 			</Layout>
 		</>
 	);

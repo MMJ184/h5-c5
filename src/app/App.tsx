@@ -1,6 +1,7 @@
 import { RouterProvider } from '@tanstack/react-router';
 
 import { useAuth } from '../auth/useAuth';
+import { ChatFloatingLauncher } from '../chat/components/ChatFloatingLauncher';
 import { AppProviders } from './AppProviders';
 import { router } from './router';
 
@@ -13,6 +14,7 @@ export default function App() {
 	return (
 		<AppProviders>
 			<RouterWithAuth />
+			<ChatFloatingLauncher />
 		</AppProviders>
 	);
 }

@@ -7,6 +7,7 @@ import {
 	WalletOutlined,
 	BarChartOutlined,
 	SettingOutlined,
+	SoundOutlined,
 } from '@ant-design/icons';
 // src/components/IconMapper.tsx
 import React from 'react';
@@ -24,6 +25,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 	WalletOutlined: <WalletOutlined />,
 	BarChartOutlined: <BarChartOutlined />,
 	SettingOutlined: <SettingOutlined />,
+	SoundOutlined: <SoundOutlined />,
 };
 
 /**
