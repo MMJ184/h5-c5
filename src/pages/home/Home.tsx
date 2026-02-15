@@ -1,3 +1,3 @@
 export default function Home() {
-	return <div style={{ padding: 24 }}>Home page</div>;
+	return <div style={{ padding: 0 }}>Home page</div>;
 }

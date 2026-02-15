@@ -2,6 +2,7 @@ import { RouterProvider } from '@tanstack/react-router';
 
 import { useAuth } from '../auth/useAuth';
 import { ChatFloatingLauncher } from '../chat/components/ChatFloatingLauncher';
+import AppErrorBoundary from './components/AppErrorBoundary';
 import { AppProviders } from './AppProviders';
 import { router } from './router';
 
@@ -13,8 +14,10 @@ function RouterWithAuth() {
 export default function App() {
 	return (
 		<AppProviders>
-			<RouterWithAuth />
-			<ChatFloatingLauncher />
+			<AppErrorBoundary>
+				<RouterWithAuth />
+				<ChatFloatingLauncher />
+			</AppErrorBoundary>
 		</AppProviders>
 	);
 }

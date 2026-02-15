@@ -137,6 +137,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 		document.documentElement.style.fontSize = `${14 * fontScale}px`;
 	}, [fontScale]);
 
+	useEffect(() => {
+		const cls = 'ant-theme-dark';
+		document.body.classList.toggle(cls, dark);
+		return () => document.body.classList.remove(cls);
+	}, [dark]);
+
 	const ctxValue = useMemo(
 		() => ({
 			dark,

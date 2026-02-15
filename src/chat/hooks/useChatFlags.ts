@@ -1,4 +1,4 @@
-import { ChatFeatureFlags } from '../types';
+import type { ChatFeatureFlags } from '../types';
 import { getChatFlags } from '../services';
 
 export const useChatFlags = (): ChatFeatureFlags => {

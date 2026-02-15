@@ -2,11 +2,15 @@ import { Space, Tag, Typography } from 'antd';
 // src/widgets/TeamSummaryWidget.tsx
 import React from 'react';
 
+import { useDashboardContext } from '../pages/dashboard/DashboardContext';
+
 const { Text } = Typography;
 
 const TeamSummaryWidget: React.FC = () => {
+	const { timeRange } = useDashboardContext();
 	return (
 		<Space direction="vertical">
+			<Text type="secondary">Range: {timeRange.label}</Text>
 			<Text strong>Team Status</Text>
 			<Space>
 				<Tag color="green">3 Online</Tag>

@@ -1,14 +1,20 @@
-import { createRootRoute, createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
+import { createRootRouteWithContext, createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 
 import MainLayout from '../../layouts/MainLayout';
+import AppCrashScreen from '../components/AppCrashScreen';
 import { requireAuth } from './guards.ts';
+import type { AuthState } from '../../auth/AuthContext';
 
 /* =========================================================
    Root layout
 ========================================================= */
 
+const createRootRoute = createRootRouteWithContext<{ auth: AuthState }>();
+
 export const rootRoute = createRootRoute({
 	component: MainLayout,
+	notFoundComponent: lazyRouteComponent(() => import('../../pages/not-found')),
+	errorComponent: AppCrashScreen,
 });
 
 /* =========================================================
@@ -52,15 +58,51 @@ export const patientsRoute = createRoute({
 	component: lazyRouteComponent(() => import('../../pages/patients')),
 });
 
+export const patientNewRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/patients/new',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			roles: ['admin', 'doctor', 'nurse', 'receptionist'],
+			permissions: ['view_patients'],
+		});
+	},
+	component: lazyRouteComponent(() => import('../../pages/patients/new')),
+});
+
+export const patientEditRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/patients/$patientId/edit',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			roles: ['admin', 'doctor', 'nurse', 'receptionist'],
+			permissions: ['view_patients'],
+		});
+	},
+	component: lazyRouteComponent(() => import('../../pages/patients/edit')),
+});
+
 export const doctorsRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: '/doctors',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			roles: ['admin', 'receptionist'],
+			permissions: ['view_doctors'],
+		});
+	},
 	component: lazyRouteComponent(() => import('../../pages/doctors')),
 });
 
 export const appointmentsRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: '/appointments',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			roles: ['admin', 'doctor', 'nurse', 'receptionist'],
+			permissions: ['view_appointments'],
+		});
+	},
 	component: lazyRouteComponent(() => import('../../pages/appointments')),
 });
 
@@ -219,7 +261,37 @@ export const hrBroadcastRoute = createRoute({
 export const loginRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: '/login',
-	component: () => import('../../pages/auth'),
+	component: lazyRouteComponent(() => import('../../pages/auth')),
+});
+
+export const forgotPasswordRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/forgot-password',
+	component: lazyRouteComponent(() => import('../../pages/auth/forgot')),
+});
+
+export const resetPasswordRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/reset-password',
+	component: lazyRouteComponent(() => import('../../pages/auth/reset')),
+});
+
+export const crashTestRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/crash-test',
+	component: lazyRouteComponent(() => import('../../pages/crash-test')),
+});
+
+export const bugsRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/bugs',
+	beforeLoad: ({ context }) => {
+		requireAuth(context.auth, {
+			roles: ['admin', 'manager', 'developer', 'qa'],
+			permissions: ['view_bugs'],
+		});
+	},
+	component: lazyRouteComponent(() => import('../../pages/bugs')),
 });
 
 export const notFoundRoute = createRoute({
@@ -236,8 +308,14 @@ export const routeTree = rootRoute.addChildren([
 	indexRoute,
 	dashboardRoute,
 	patientsRoute,
+	patientNewRoute,
+	patientEditRoute,
 	doctorsRoute,
 	loginRoute,
+	forgotPasswordRoute,
+	resetPasswordRoute,
+	crashTestRoute,
+	bugsRoute,
 	appointmentsRoute,
 	leaveCalendarRoute,
 	leaveApplyRoute,

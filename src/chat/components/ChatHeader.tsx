@@ -1,6 +1,6 @@
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Button, Tag, Typography, theme } from 'antd';
-import { Conversation, UserSummary } from '../types';
+import type { Conversation, UserSummary } from '../types';
 
 interface ChatHeaderProps {
   conversation: Conversation;

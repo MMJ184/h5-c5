@@ -1,4 +1,4 @@
-import { ChatServiceConfig } from '../types';
+import type { ChatServiceConfig } from '../types';
 
 const parseBool = (value: string | undefined, fallback = false) => {
   if (value === undefined) return fallback;

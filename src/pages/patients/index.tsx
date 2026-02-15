@@ -18,7 +18,6 @@ import {
 	Drawer,
 	Dropdown,
 	Input,
-	Menu,
 	Popconfirm,
 	Row,
 	Select,
@@ -31,18 +30,17 @@ import {
 	Skeleton,
 } from 'antd';
 import dayjs from 'dayjs';
-import React, { JSX, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 
 import {
 	usePatientsQuery,
-	useCreatePatient,
-	useUpdatePatient,
 	useDeletePatient,
 	useBulkDeletePatients,
 } from './patient.queries';
-import PatientForm, { type PatientFormValues } from './PatientForm';
 
 import type { ColumnsType } from 'antd/es/table';
+import type { JSX, Key, ReactNode } from 'react';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -71,11 +69,13 @@ export default function PatientsPage(): JSX.Element {
 	const [gender, setGender] = useState<string>('all');
 	const [dateRange, setDateRange] = useState<any>(null);
 
-	const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+	const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 	const [pagination, setPagination] = useState({
 		current: 1,
 		pageSize: 10,
 	});
+
+	const navigate = useNavigate();
 
 	const [sorter, setSorter] = useState<{
 		field?: string;
@@ -85,12 +85,6 @@ export default function PatientsPage(): JSX.Element {
 	// UI
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [drawerPatient, setDrawerPatient] = useState<Patient | null>(null);
-
-	// Form modal state
-	const [formVisible, setFormVisible] = useState(false);
-	const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
-	const [formInitial, setFormInitial] = useState<Partial<PatientFormValues> | undefined>(undefined);
-	const [editingPatientId, setEditingPatientId] = useState<string | null>(null);
 
 	// column visibility persisted
 	const LOCAL_COLS_KEY = 'patients_visible_columns_v1';
@@ -143,8 +137,6 @@ export default function PatientsPage(): JSX.Element {
 	// queries + mutations
 	const patientsQuery = usePatientsQuery(patientsParams);
 
-	const createMut = useCreatePatient();
-	const updateMut = useUpdatePatient();
 	const deleteMut = useDeletePatient();
 	const bulkDeleteMut = useBulkDeletePatients();
 
@@ -153,8 +145,6 @@ export default function PatientsPage(): JSX.Element {
 
 	const data: Patient[] = (patientsQuery.data?.data ?? []) as Patient[];
 	const total: number = patientsQuery.data?.total ?? 0;
-
-	const confirmLoading = createMut.isPending || updateMut.isPending;
 
 	// show fetch error once
 	useEffect(() => {
@@ -365,13 +355,7 @@ export default function PatientsPage(): JSX.Element {
 									icon={<EditOutlined />}
 									size="small"
 									onClick={() => {
-										setFormMode('edit');
-										setFormInitial({
-											...record,
-											lastVisit: record.lastVisit ? dayjs(record.lastVisit) : undefined,
-										});
-										setEditingPatientId(record.id);
-										setFormVisible(true);
+										navigate({ to: `/patients/${record.id}/edit` });
 									}}
 								/>
 							</Tooltip>
@@ -393,7 +377,7 @@ export default function PatientsPage(): JSX.Element {
 	}, [pagination.current, pagination.pageSize, loading]);
 
 	const columns = useMemo(
-		() => allColumns.filter((c) => !hiddenCols.includes(String(c.dataIndex))),
+		() => allColumns.filter((c) => !hiddenCols.includes(String('dataIndex' in c ? c.dataIndex : c.key))),
 		[allColumns, hiddenCols],
 	);
 
@@ -415,7 +399,7 @@ export default function PatientsPage(): JSX.Element {
 
 	const rowSelection = {
 		selectedRowKeys,
-		onChange: (keys: React.Key[]) => setSelectedRowKeys(keys),
+		onChange: (keys: Key[]) => setSelectedRowKeys(keys),
 	};
 
 	// applied filters chips
@@ -431,56 +415,23 @@ export default function PatientsPage(): JSX.Element {
 		return items;
 	}, [debouncedSearch, gender, dateRange]);
 
-	const columnsMenu = (
-		<Menu>
-			{allColumns.map((col) => {
-				const key = String(col.dataIndex);
-				const disabled = key === 'sr' || key === 'actions' || key === 'avatarUrl';
-				return (
-					<Menu.Item key={key}>
-						<Checkbox
-							checked={!hiddenCols.includes(key)}
-							disabled={disabled}
-							onChange={(e) => toggleColumnVisibility(key, e.target.checked)}
-						>
-							{col.title as React.ReactNode}
-						</Checkbox>
-					</Menu.Item>
-				);
-			})}
-		</Menu>
-	);
-
-	async function handleCreate(values: PatientFormValues) {
-		try {
-			const payload = {
-				...values,
-				lastVisit: values.lastVisit ? values.lastVisit.format('YYYY-MM-DD') : undefined,
-			};
-			await createMut.mutateAsync(payload);
-			message.success('Patient created');
-			setFormVisible(false);
-			setEditingPatientId(null);
-			setPagination((p) => ({ ...p, current: 1 }));
-		} catch (e) {
-			message.error('Failed to create patient');
-		}
-	}
-
-	async function handleUpdate(id: string, values: PatientFormValues) {
-		try {
-			const payload = {
-				...values,
-				lastVisit: values.lastVisit ? values.lastVisit.format('YYYY-MM-DD') : undefined,
-			};
-			await updateMut.mutateAsync({ id, payload });
-			message.success('Patient updated');
-			setFormVisible(false);
-			setEditingPatientId(null);
-		} catch (e) {
-			message.error('Failed to update patient');
-		}
-	}
+	const columnsMenuItems = allColumns.map((col) => {
+		const key = String('dataIndex' in col ? col.dataIndex : col.key);
+		const disabled = key === 'sr' || key === 'actions' || key === 'avatarUrl';
+		return {
+			key,
+			disabled,
+			label: (
+				<Checkbox
+					checked={!hiddenCols.includes(key)}
+					disabled={disabled}
+					onChange={(e) => toggleColumnVisibility(key, e.target.checked)}
+				>
+					{col.title as ReactNode}
+				</Checkbox>
+			),
+		};
+	});
 
 	async function handleDelete(id: string) {
 		try {
@@ -507,12 +458,6 @@ export default function PatientsPage(): JSX.Element {
 		}
 	}
 
-	async function onFormSubmit(values: PatientFormValues) {
-		if (formMode === 'add') return handleCreate(values);
-		if (formMode === 'edit' && editingPatientId) return handleUpdate(editingPatientId, values);
-		message.error('Missing patient id for update');
-	}
-
 	// skeleton rows for table when loading
 	const skeletonData = useMemo(() => {
 		if (!loading) return [];
@@ -526,7 +471,7 @@ export default function PatientsPage(): JSX.Element {
 	const rangeEnd = Math.min(pagination.current * pagination.pageSize, total);
 
 	return (
-		<div style={{ padding: 12 }}>
+		<div style={{ padding: 0 }}>
 			{/* Top controls */}
 			<Row justify="space-between" align="middle" style={{ marginBottom: 12 }}>
 				<Col>
@@ -552,17 +497,14 @@ export default function PatientsPage(): JSX.Element {
 						>
 							Clear Filters
 						</Button>
-						<Dropdown overlay={columnsMenu} trigger={['click']}>
+						<Dropdown menu={{ items: columnsMenuItems }} trigger={['click']}>
 							<Button icon={<SettingOutlined />}>Columns</Button>
 						</Dropdown>
 						<Button
 							type="primary"
 							icon={<PlusOutlined />}
 							onClick={() => {
-								setFormMode('add');
-								setFormInitial(undefined);
-								setEditingPatientId(null);
-								setFormVisible(true);
+								navigate({ to: '/patients/new' });
 							}}
 						>
 							Add Patient
@@ -728,28 +670,48 @@ export default function PatientsPage(): JSX.Element {
 				)}
 			</Drawer>
 
-			{/* PatientForm usage */}
-			{formVisible && (
-				<PatientForm
-					visible={formVisible}
-					mode={formMode}
-					initialValues={formInitial}
-					confirmLoading={confirmLoading}
-					onCancel={() => {
-						setFormVisible(false);
-						setEditingPatientId(null);
-						setFormInitial(undefined);
-					}}
-					onSubmit={onFormSubmit}
-					avatarPlaceholderUrl={UPLOADED_ASSET}
-				/>
-			)}
-
 			{/* Styles */}
 			<style>{`
         .ant-table-tbody > tr:hover > td {
           background: rgba(24, 144, 255, 0.04);
           transition: background 0.12s;
+        }
+        .ant-table-selection-column .ant-checkbox .ant-checkbox-inner {
+          border: 1.5px solid rgba(15, 23, 42, 0.55) !important;
+          background: #fff;
+          transition: all 0.15s ease;
+        }
+        .ant-table-selection-column .ant-checkbox:hover .ant-checkbox-inner {
+          border-color: #1677ff !important;
+        }
+        .ant-table-selection-column .ant-checkbox-checked .ant-checkbox-inner {
+          background: #1677ff !important;
+          border-color: #1677ff !important;
+        }
+        .ant-table-selection-column .ant-checkbox-indeterminate .ant-checkbox-inner {
+          border-color: #1677ff !important;
+          background: #fff !important;
+        }
+        .ant-table-selection-column .ant-checkbox-indeterminate .ant-checkbox-inner:after {
+          background-color: #1677ff !important;
+        }
+        body.ant-theme-dark .ant-table-selection-column .ant-checkbox .ant-checkbox-inner {
+          border-color: rgba(226, 232, 240, 0.82) !important;
+          background: rgba(15, 23, 42, 0.92) !important;
+        }
+        body.ant-theme-dark .ant-table-selection-column .ant-checkbox:hover .ant-checkbox-inner {
+          border-color: #60a5fa !important;
+        }
+        body.ant-theme-dark .ant-table-selection-column .ant-checkbox-checked .ant-checkbox-inner {
+          background: #3b82f6 !important;
+          border-color: #3b82f6 !important;
+        }
+        body.ant-theme-dark .ant-table-selection-column .ant-checkbox-indeterminate .ant-checkbox-inner {
+          border-color: #60a5fa !important;
+          background: rgba(15, 23, 42, 0.92) !important;
+        }
+        body.ant-theme-dark .ant-table-selection-column .ant-checkbox-indeterminate .ant-checkbox-inner:after {
+          background-color: #93c5fd !important;
         }
       `}</style>
 		</div>

@@ -1,6 +1,6 @@
 import { MessageOutlined } from '@ant-design/icons';
 import { Button, Drawer, theme } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useChatFlags } from '../hooks/useChatFlags';
 import { ChatModule } from './ChatModule';
 

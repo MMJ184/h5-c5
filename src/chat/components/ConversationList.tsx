@@ -1,6 +1,6 @@
 import { MessageOutlined, RobotOutlined, SearchOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Input, List, Tag, Typography, theme } from 'antd';
-import { Conversation } from '../types';
+import type { Conversation } from '../types';
 import { formatDateTime } from '../utils';
 
 interface ConversationListProps {

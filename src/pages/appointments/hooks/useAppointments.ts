@@ -19,6 +19,16 @@ export interface Appointment {
 /* Query Keys */
 const APPOINTMENTS_QUERY_KEY = ['appointments'] as const;
 
+function normalizeAppointmentsPayload(payload: unknown): Appointment[] {
+	if (Array.isArray(payload)) return payload as Appointment[];
+	if (payload && typeof payload === 'object') {
+		const obj = payload as Record<string, unknown>;
+		if (Array.isArray(obj.data)) return obj.data as Appointment[];
+		if (Array.isArray(obj.items)) return obj.items as Appointment[];
+	}
+	return [];
+}
+
 /* Temporary Dummy Data */
 const DUMMY_APPOINTMENTS: Appointment[] = [
 	{
@@ -107,7 +117,11 @@ export default function useAppointments() {
 		queryKey: APPOINTMENTS_QUERY_KEY,
 		queryFn: async () => {
 			try {
-				return await appointmentApi.getAll();
+				const res = await appointmentApi.list();
+				const normalized = normalizeAppointmentsPayload(res.data);
+				if (normalized.length > 0) return normalized;
+				// if backend shape is unexpected, use resilient fallback instead of breaking UI
+				return DUMMY_APPOINTMENTS;
 			} catch (err) {
 				console.warn('API failed, using dummy data:', err);
 				return DUMMY_APPOINTMENTS;
@@ -131,15 +145,16 @@ export default function useAppointments() {
 			const optimisticAppointment: Appointment = {
 				id: `temp_${Date.now()}`,
 				...newAppointment,
+				status: newAppointment.status ?? 'pending',
 			};
 			queryClient.setQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY, (old = []) => [
-				...old,
+				...(Array.isArray(old) ? old : []),
 				optimisticAppointment,
 			]);
 
 			return { previousAppointments };
 		},
-		onError: (err, newAppointment, context) => {
+		onError: (err, _newAppointment, context) => {
 			// Rollback on error
 			if (context?.previousAppointments) {
 				queryClient.setQueryData(APPOINTMENTS_QUERY_KEY, context.previousAppointments);
@@ -164,12 +179,12 @@ export default function useAppointments() {
 			const previousAppointments = queryClient.getQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY);
 
 			queryClient.setQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY, (old = []) =>
-				old.map((appt) => (appt.id === id ? { ...appt, ...data } : appt)),
+				(Array.isArray(old) ? old : []).map((appt) => (appt.id === id ? { ...appt, ...data } : appt)),
 			);
 
 			return { previousAppointments };
 		},
-		onError: (err, variables, context) => {
+		onError: (err, _variables, context) => {
 			if (context?.previousAppointments) {
 				queryClient.setQueryData(APPOINTMENTS_QUERY_KEY, context.previousAppointments);
 			}
@@ -186,18 +201,18 @@ export default function useAppointments() {
 
 	/* ---------- DELETE APPOINTMENT ---------- */
 	const deleteMutation = useMutation({
-		mutationFn: (id: string) => appointmentApi.delete(id),
+		mutationFn: (id: string) => appointmentApi.remove(id),
 		onMutate: async (id) => {
 			await queryClient.cancelQueries({ queryKey: APPOINTMENTS_QUERY_KEY });
 			const previousAppointments = queryClient.getQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY);
 
 			queryClient.setQueryData<Appointment[]>(APPOINTMENTS_QUERY_KEY, (old = []) =>
-				old.filter((appt) => appt.id !== id),
+				(Array.isArray(old) ? old : []).filter((appt) => appt.id !== id),
 			);
 
 			return { previousAppointments };
 		},
-		onError: (err, id, context) => {
+		onError: (err, _id, context) => {
 			if (context?.previousAppointments) {
 				queryClient.setQueryData(APPOINTMENTS_QUERY_KEY, context.previousAppointments);
 			}

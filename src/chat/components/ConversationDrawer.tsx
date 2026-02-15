@@ -1,5 +1,5 @@
 import { Avatar, Drawer, List, Tag, Typography } from 'antd';
-import { Conversation } from '../types';
+import type { Conversation } from '../types';
 
 interface ConversationDrawerProps {
   open: boolean;

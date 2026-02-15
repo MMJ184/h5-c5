@@ -2,11 +2,15 @@ import { Space, Typography } from 'antd';
 // src/widgets/TimelineWidget.tsx
 import React from 'react';
 
+import { useDashboardContext } from '../pages/dashboard/DashboardContext';
+
 const { Text } = Typography;
 
 const TimelineWidget: React.FC = () => {
+	const { timeRange } = useDashboardContext();
 	return (
 		<Space direction="vertical">
+			<Text type="secondary">Range: {timeRange.label}</Text>
 			<Text strong>Release Timeline</Text>
 			<ul style={{ paddingLeft: 18 }}>
 				<li>

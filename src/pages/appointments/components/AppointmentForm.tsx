@@ -1,6 +1,6 @@
 import { Modal, Form, Input, DatePicker, TimePicker, Select, InputNumber } from 'antd';
 import dayjs from 'dayjs';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import type { Appointment } from '../hooks/useAppointments.ts';
 

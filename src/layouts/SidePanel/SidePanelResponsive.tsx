@@ -1,7 +1,9 @@
-import { Drawer, Layout, Menu, theme as antdTheme } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
+import { Button, Drawer, Layout, Menu, theme as antdTheme } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { router } from '../../app/router';
+import { useAuth } from '../../auth/useAuth';
 import { resolveIcon } from '../../navigation/IconMapper';
 import { findItemByKey } from '../../navigation/menuHelpers';
 
@@ -34,6 +36,7 @@ export default function SidePanelResponsive({
 	menuItems,
 }: SidePanelResponsiveProps) {
 	const { token } = useToken();
+	const auth = useAuth();
 
 	const [isMobile, setIsMobile] = useState<boolean>(() => {
 		if (typeof window === 'undefined') return false;
@@ -129,24 +132,89 @@ export default function SidePanelResponsive({
 	);
 
 	const menuNodes = useMemo(() => buildMenuNodes(menuItems), [buildMenuNodes, menuItems]);
+	const rootSubmenuKeys = useMemo(
+		() =>
+			menuNodes
+				.filter((item) => item && typeof item === 'object' && 'children' in item && (item as any).children?.length)
+				.map((item) => String((item as any).key)),
+		[menuNodes],
+	);
+	const [openKeys, setOpenKeys] = useState<string[]>([]);
+
+	const handleLogout = useCallback(() => {
+		auth.logout?.();
+		router.navigate({ to: '/login' });
+		if (isMobile) setDrawerOpenEffective(false);
+	}, [auth, isMobile, setDrawerOpenEffective]);
 
 	const menu = useMemo(
 		() => (
-			<Menu
-				mode="inline"
-				selectedKeys={selectedKey ? [selectedKey] : []}
-				onClick={(info) => onMenuClick({ key: String(info.key) })}
-				items={menuNodes}
+			<div
 				style={{
 					height: 'calc(100% - 64px)',
-					borderRight: 0,
-					background: token.colorBgContainer,
-					color: token.colorText,
+					display: 'flex',
+					flexDirection: 'column',
 				}}
-				rootClassName="app-side-menu"
-			/>
+			>
+				<Menu
+					mode="inline"
+					selectedKeys={selectedKey ? [selectedKey] : []}
+					openKeys={openKeys}
+					onOpenChange={(keys) => {
+						const latestOpenKey = keys.find((key) => !openKeys.includes(key));
+						if (latestOpenKey && rootSubmenuKeys.includes(latestOpenKey)) {
+							setOpenKeys([latestOpenKey]);
+						} else {
+							setOpenKeys(keys as string[]);
+						}
+					}}
+					onClick={(info) => onMenuClick({ key: String(info.key) })}
+					items={menuNodes}
+					style={{
+						flex: '1 1 auto',
+						borderRight: 0,
+						background: token.colorBgContainer,
+						color: token.colorText,
+						overflowY: 'auto',
+					}}
+					rootClassName="app-side-menu"
+				/>
+				<div
+					style={{
+						padding: collapsed ? 8 : 12,
+						borderTop: `1px solid ${token.colorBorderSecondary}`,
+						background: token.colorBgContainer,
+					}}
+				>
+					<Button
+						type="text"
+						icon={<LogoutOutlined />}
+						onClick={handleLogout}
+						style={{
+							width: '100%',
+							display: 'flex',
+							justifyContent: collapsed ? 'center' : 'flex-start',
+							alignItems: 'center',
+							gap: 8,
+						}}
+					>
+						{collapsed ? null : 'Logout'}
+					</Button>
+				</div>
+			</div>
 		),
-		[selectedKey, onMenuClick, menuNodes, token.colorBgContainer, token.colorText],
+		[
+			selectedKey,
+			onMenuClick,
+			menuNodes,
+			token.colorBgContainer,
+			token.colorBorderSecondary,
+			token.colorText,
+			handleLogout,
+			collapsed,
+			openKeys,
+			rootSubmenuKeys,
+		],
 	);
 
 	if (isMobile) {

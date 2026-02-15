@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useTheme } from '../../app/providers/ThemeProvider';
 import MenuPrefetcher from '../../app/router/MenuPrefetcher.tsx';
+import { useAuth } from '../../auth/useAuth';
 import NotificationPanel from '../../components/NotificationPanel';
 import { useNotifications } from '../../app/providers/NotificationProvider';
 import ThemePanel from '../../components/ThemePanel';
@@ -16,8 +17,7 @@ const { Header, Content } = Layout;
 const { Title } = Typography;
 
 export default function MainLayout() {
-	const pathname11 = useRouterState({ select: (s) => s.location.pathname });
-	console.log('ROUTE:', pathname11);
+	const auth = useAuth();
 
 	/* ---------------- theme ---------------- */
 	const { token } = antdTheme.useToken();
@@ -72,6 +72,16 @@ export default function MainLayout() {
 	useEffect(() => {
 		if (!isMobile) setMobileOpen(false);
 	}, [isMobile]);
+
+	useEffect(() => {
+		if (!auth.isAuthenticated && !['/login', '/forgot-password', '/reset-password'].includes(pathname)) {
+			router.navigate({ to: '/login', replace: true });
+		}
+	}, [auth.isAuthenticated, pathname, router]);
+
+	if (!auth.isAuthenticated) {
+		return <Outlet />;
+	}
 
 	/* ---------------- render ---------------- */
 	return (
@@ -159,9 +169,9 @@ export default function MainLayout() {
 						</Space>
 					</Header>
 
-					<Content style={{ margin: 16 }}>
+					<Content style={{ padding: 16 }}>
 						{/* ✅ TanStack Router renders pages here */}
-						<div style={{ marginTop: 16 }}>
+						<div style={{ marginTop: 0 }}>
 							<Outlet />
 						</div>
 					</Content>

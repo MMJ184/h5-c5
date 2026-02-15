@@ -1,6 +1,6 @@
 import { DndContext, type DragEndEvent, DragOverlay, type DragStartEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
-import { message, Spin } from 'antd';
+import { message, Spin, theme } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 import AppointmentCard from './AppointmentCard';
@@ -30,6 +30,7 @@ export default function AppointmentKanban({
 	onChangeStatus,
 	onAddNew 
 }: Props) {
+	const { token } = theme.useToken();
 	/* ---------- COLUMN CONFIGURATION ---------- */
 	const [columns, setColumns] = useState<Column[]>([
 		{ id: 'pending', title: 'Pending' },
@@ -161,9 +162,10 @@ export default function AppointmentKanban({
 					overflowX: 'auto',
 					overflowY: 'hidden',
 					padding: '16px 8px',
-					background: '#fafafa',
+					background: token.colorBgLayout,
 					borderRadius: 8,
 					minHeight: 'calc(100vh - 280px)',
+					border: `1px solid ${token.colorBorderSecondary}`,
 				}}
 			>
 				<SortableContext items={columns.map((c) => c.id)} strategy={horizontalListSortingStrategy}>

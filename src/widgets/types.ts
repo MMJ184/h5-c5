@@ -16,6 +16,7 @@ export interface WidgetDefinition {
 	type: WidgetType;
 	title: string;
 	description: string;
+	category: string;
 	defaultW: number;
 	defaultH: number;
 	minW?: number;

@@ -1,3 +1,4 @@
+// @ts-ignore - intentional deep import shim for legacy compatibility
 import * as ReactDOMOriginal from '../../node_modules/react-dom/index.js';
 
 // Provide a default export with findDOMNode for legacy libraries.
@@ -15,6 +16,7 @@ const ReactDOMCompat = {
 	findDOMNode,
 };
 
+// @ts-ignore - intentional deep re-export shim for legacy compatibility
 export * from '../../node_modules/react-dom/index.js';
 export { findDOMNode };
 export default ReactDOMCompat;

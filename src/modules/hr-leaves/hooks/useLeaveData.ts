@@ -58,14 +58,14 @@ export const useApplyLeave = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: LeaveRequestInput) => leaveService.createLeaveRequest(input),
-    onSuccess: (_data, variables) => {
-      notification.success({ message: 'Leave request submitted' });
+    onSuccess: () => {
+      notification.success({ title: 'Leave request submitted' });
       queryClient.invalidateQueries({ queryKey: ['leaveRequests'] });
       queryClient.invalidateQueries({ queryKey: ['leaveCalendar'] });
       queryClient.invalidateQueries({ queryKey: ['leaveApprovals'] });
     },
     onError: (error: any) => {
-      notification.error({ message: 'Unable to submit request', description: error?.message });
+      notification.error({ title: 'Unable to submit request', description: error?.message });
     },
   });
 };
@@ -75,13 +75,13 @@ export const useApproveLeave = () => {
   return useMutation({
     mutationFn: (input: LeaveApprovalInput) => leaveService.approveLeave(input),
     onSuccess: () => {
-      notification.success({ message: 'Leave approved' });
+      notification.success({ title: 'Leave approved' });
       queryClient.invalidateQueries({ queryKey: ['leaveApprovals'] });
       queryClient.invalidateQueries({ queryKey: ['leaveCalendar'] });
       queryClient.invalidateQueries({ queryKey: ['leaveRequests'] });
     },
     onError: (error: any) => {
-      notification.error({ message: 'Unable to approve', description: error?.message });
+      notification.error({ title: 'Unable to approve', description: error?.message });
     },
   });
 };
@@ -91,13 +91,13 @@ export const useRejectLeave = () => {
   return useMutation({
     mutationFn: (input: LeaveApprovalInput) => leaveService.rejectLeave(input),
     onSuccess: () => {
-      notification.success({ message: 'Leave rejected' });
+      notification.success({ title: 'Leave rejected' });
       queryClient.invalidateQueries({ queryKey: ['leaveApprovals'] });
       queryClient.invalidateQueries({ queryKey: ['leaveRequests'] });
       queryClient.invalidateQueries({ queryKey: ['leaveCalendar'] });
     },
     onError: (error: any) => {
-      notification.error({ message: 'Unable to reject', description: error?.message });
+      notification.error({ title: 'Unable to reject', description: error?.message });
     },
   });
 };
@@ -106,13 +106,13 @@ export const useCancelLeave = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: LeaveCancelInput) => leaveService.cancelLeave(input),
-    onSuccess: (_data, variables) => {
-      notification.success({ message: 'Leave cancelled' });
+    onSuccess: () => {
+      notification.success({ title: 'Leave cancelled' });
       queryClient.invalidateQueries({ queryKey: ['leaveRequests'] });
       queryClient.invalidateQueries({ queryKey: ['leaveCalendar'] });
     },
     onError: (error: any) => {
-      notification.error({ message: 'Unable to cancel', description: error?.message });
+      notification.error({ title: 'Unable to cancel', description: error?.message });
     },
   });
 };

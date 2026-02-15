@@ -1,8 +1,8 @@
 import { ArrowUpOutlined } from '@ant-design/icons';
 import { Avatar, Button, Spin, Typography, theme } from 'antd';
-import { Message, UserSummary } from '../types';
+import type { Message, UserSummary } from '../types';
 import { formatDateTime } from '../utils';
-import React, { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 interface MessageListProps {
   messages: Message[];

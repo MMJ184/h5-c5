@@ -3,9 +3,12 @@ import { Space, Typography } from 'antd';
 // src/widgets/ChartPlaceholderWidget.tsx
 import React from 'react';
 
+import { useDashboardContext } from '../pages/dashboard/DashboardContext';
+
 const { Text } = Typography;
 
 const ChartPlaceholderWidget: React.FC = () => {
+	const { timeRange } = useDashboardContext();
 	return (
 		<div
 			style={{
@@ -20,6 +23,7 @@ const ChartPlaceholderWidget: React.FC = () => {
 		>
 			<Space direction="vertical" align="center">
 				<AppstoreOutlined style={{ fontSize: 28 }} />
+				<Text type="secondary">Range: {timeRange.label}</Text>
 				<Text type="secondary">Chart goes here (connect real data later)</Text>
 			</Space>
 		</div>

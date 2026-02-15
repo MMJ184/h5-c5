@@ -5,7 +5,7 @@ import { dateKey } from './calendar.utils';
 import DayColumn from './DayColumn';
 import TimeColumn from './TimeColumn';
 
-import type { Appointment } from './calendar.types.ts';
+import type { Appointment } from '../../hooks/useAppointments.ts';
 
 interface Props {
 	current: dayjs.Dayjs;
@@ -17,9 +17,10 @@ interface Props {
 export default function WeekView({ current, appointments, onCreate, onEdit }: Props) {
 	const start = current.startOf('week');
 	const days = Array.from({ length: 7 }).map((_, i) => start.add(i, 'day'));
+	const safeAppointments = Array.isArray(appointments) ? appointments : [];
 
 	const byDate = new Map<string, Appointment[]>();
-	appointments.forEach((a) => {
+	safeAppointments.forEach((a) => {
 		const key = dateKey(a.date);
 		if (!byDate.has(key)) byDate.set(key, []);
 		byDate.get(key)!.push(a);

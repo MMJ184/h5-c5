@@ -1,4 +1,4 @@
-import { Conversation, Message, MessageSummary, User } from '../types';
+import type { Conversation, Message, MessageSummary, User } from '../types';
 
 const now = Date.now();
 let messageCounter = 1;

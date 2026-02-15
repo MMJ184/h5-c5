@@ -1,5 +1,5 @@
 import { dummyStore, buildConversation, ensureConversationSummaries } from '../dummy/data';
-import {
+import type {
   ChatService,
   Conversation,
   CreateConversationInput,

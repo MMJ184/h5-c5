@@ -14,6 +14,7 @@ import type { ViewMode } from './calendar.types.ts';
 
 interface Props {
 	appointments: Appointment[];
+	loading?: boolean;
 	onCreateForDate: (dateTimeIso: string) => void;
 	onEdit: (a: Appointment) => void;
 }

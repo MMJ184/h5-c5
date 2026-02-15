@@ -1,6 +1,7 @@
 import { MessageOutlined, RobotOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Spin, Tabs, Typography, theme } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
 import { useChatFlags } from '../hooks/useChatFlags';
 import { useConversations } from '../hooks/useConversations';
 import { useCurrentUser } from '../hooks/useCurrentUser';
@@ -12,14 +13,14 @@ import { ConversationDrawer } from './ConversationDrawer';
 import { ConversationList } from './ConversationList';
 import { MessageList } from './MessageList';
 import { Composer } from './Composer';
-import { Conversation } from '../types';
+import type { Conversation } from '../types';
 
 const { Sider, Content } = Layout;
 
 type ChatMode = 'human' | 'bot' | 'agent';
 
-const modeTabs = (flags: ReturnType<typeof useChatFlags>): { key: ChatMode; label: string }[] => {
-  const tabs: { key: ChatMode; label: string }[] = [
+const modeTabs = (flags: ReturnType<typeof useChatFlags>): { key: ChatMode; label: string; icon: ReactNode }[] => {
+  const tabs: { key: ChatMode; label: string; icon: ReactNode }[] = [
     { key: 'human', label: 'Human', icon: <MessageOutlined /> },
   ];
   if (flags.chat.bot.enabled) tabs.push({ key: 'bot', label: 'Bot', icon: <RobotOutlined /> });

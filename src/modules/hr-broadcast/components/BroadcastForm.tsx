@@ -43,7 +43,7 @@ export const BroadcastForm = () => {
           : `Broadcast sent to ${payload.recipients.length} user(s).`,
       type: values.level,
     });
-    notification.success({ message: 'Broadcast sent' });
+    notification.success({ title: 'Broadcast sent' });
     form.resetFields();
   };
 

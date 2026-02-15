@@ -2,7 +2,7 @@ import { message } from 'antd';
 import { createApiAdapter, ApiError } from './apiAdapter';
 import { getChatConfig } from './config';
 import { createDummyAdapter } from './dummyAdapter';
-import {
+import type {
   ChatService,
   Conversation,
   CreateConversationInput,

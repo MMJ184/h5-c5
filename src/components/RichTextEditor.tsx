@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import type { ComponentType } from 'react';
 
 import 'react-quill/dist/quill.snow.css';
 
@@ -25,7 +26,7 @@ export default function RichTextEditor({
 	height = 160,
 	readOnly,
 }: RichTextEditorProps) {
-	const [Quill, setQuill] = useState<React.ComponentType<any> | null>(null);
+	const [Quill, setQuill] = useState<ComponentType<any> | null>(null);
 
 	useEffect(() => {
 		let mounted = true;
@@ -66,7 +67,7 @@ export default function RichTextEditor({
 			<Quill
 				theme="snow"
 				value={value ?? ''}
-				onChange={(content) => onChange?.(content)}
+				onChange={(content: string) => onChange?.(content)}
 				modules={modules}
 				placeholder={placeholder}
 				readOnly={readOnly}

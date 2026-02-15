@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getChatService } from '../services';
 import { conversationsQueryKey } from './useConversations';
-import { MarkReadInput } from '../types';
+import type { MarkReadInput } from '../types';
 
 export const useMarkRead = () => {
   const queryClient = useQueryClient();

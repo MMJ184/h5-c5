@@ -10,7 +10,7 @@ import type { CalendarProps } from 'antd';
 import type { ViewMode } from '../../../pages/appointments/components/calendar/calendar.types';
 
 import { useLeaveCalendar, useLeaveCurrentUser, useLeaveTypes, useLeaveUsers } from '../hooks/useLeaveData';
-import { LeaveStatus } from '../types';
+import type { LeaveStatus } from '../types';
 import { mapRequestsToCalendarEvents } from '../utils/mappers';
 
 interface DayEventItem {
@@ -124,7 +124,7 @@ export const AvailabilityCalendar = () => {
   const userOptions = useMemo(() => users.map((u) => ({ label: u.name, value: u.id })), [users]);
   const typeOptions = useMemo(() => leaveTypes.map((t) => ({ label: t.name, value: t.id })), [leaveTypes]);
 
-  const cellRender: CalendarProps['cellRender'] = (date, info) => {
+  const cellRender: CalendarProps<dayjs.Dayjs>['cellRender'] = (date, info) => {
     if (info.type !== 'date') return info.originNode;
     const list = eventsByDate.get(dateKey(date)) ?? [];
     if (!list.length) return null;

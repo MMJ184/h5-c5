@@ -1,3 +1,3 @@
 export default function Profile() {
-	return <div style={{ padding: 24 }}>Profile page</div>;
+	return <div style={{ padding: 0 }}>Profile page</div>;
 }

@@ -1,7 +1,7 @@
 import { RobotOutlined, SendOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Input, theme } from 'antd';
-import React, { useState } from 'react';
-import { ConversationType } from '../types';
+import { useState } from 'react';
+import type { ConversationType } from '../types';
 
 interface ComposerProps {
   mode: ConversationType;

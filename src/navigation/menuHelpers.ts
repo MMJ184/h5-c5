@@ -1,6 +1,6 @@
 import type { RawMenuItem } from './menu.types.ts';
 
-export function findItemByKey(items: RawMenuItem[] | null | undefined, key: string) {
+export function findItemByKey(items: RawMenuItem[] | null | undefined, key: string): RawMenuItem | null {
 	if (!items) return null;
 	for (const it of items) {
 		if (String(it.key) === key) return it;
@@ -12,7 +12,7 @@ export function findItemByKey(items: RawMenuItem[] | null | undefined, key: stri
 	return null;
 }
 
-export function findKeyByPath(items: RawMenuItem[] | null | undefined, pathname: string) {
+export function findKeyByPath(items: RawMenuItem[] | null | undefined, pathname: string): string | undefined {
 	if (!items) return undefined;
 	for (const it of items) {
 		if (it.path && normalizePath(it.path) === normalizePath(pathname)) return it.key;

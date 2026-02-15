@@ -3,7 +3,7 @@ import { getChatService } from '../services';
 import { conversationsQueryKey } from './useConversations';
 import { currentUserQueryKey } from './useCurrentUser';
 import { messagesQueryKey } from './useMessages';
-import { Conversation, Message, SendMessageInput } from '../types';
+import type { Conversation, Message, SendMessageInput } from '../types';
 
 const buildOptimisticMessage = (
   input: SendMessageInput,

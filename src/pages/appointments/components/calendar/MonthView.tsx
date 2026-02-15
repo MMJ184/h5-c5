@@ -14,15 +14,16 @@ interface Props {
 }
 
 export default function MonthView({ current, appointments, onChange, onEdit }: Props) {
+	const safeAppointments = Array.isArray(appointments) ? appointments : [];
 	// group appointments by date
 	const byDate = new Map<string, Appointment[]>();
-	appointments.forEach((a) => {
+	safeAppointments.forEach((a) => {
 		const key = dateKey(a.date);
 		if (!byDate.has(key)) byDate.set(key, []);
 		byDate.get(key)!.push(a);
 	});
 
-	const cellRender: CalendarProps['cellRender'] = (date, info) => {
+	const cellRender: CalendarProps<dayjs.Dayjs>['cellRender'] = (date, info) => {
 		if (info.type !== 'date') return info.originNode;
 
 		const list = byDate.get(dateKey(date)) ?? [];

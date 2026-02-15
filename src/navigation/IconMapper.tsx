@@ -1,13 +1,25 @@
 import {
-	PieChartOutlined,
-	UserOutlined,
-	TeamOutlined,
+	BookOutlined,
 	CalendarOutlined,
+	CheckCircleOutlined,
+	ExperimentOutlined,
+	FileDoneOutlined,
+	FileTextOutlined,
+	FormOutlined,
+	HeartOutlined,
+	PieChartOutlined,
+	ProfileOutlined,
+	SafetyCertificateOutlined,
+	SettingOutlined,
+	SoundOutlined,
+	UserOutlined,
+	UserSwitchOutlined,
+	TeamOutlined,
 	MedicineBoxOutlined,
 	WalletOutlined,
 	BarChartOutlined,
-	SettingOutlined,
-	SoundOutlined,
+	WarningOutlined,
+	BugOutlined,
 } from '@ant-design/icons';
 // src/components/IconMapper.tsx
 import React from 'react';
@@ -17,15 +29,27 @@ import React from 'react';
  * Icon names must match backend/menu JSON exactly.
  */
 const ICON_MAP: Record<string, React.ReactNode> = {
-	PieChartOutlined: <PieChartOutlined />,
-	UserOutlined: <UserOutlined />,
-	TeamOutlined: <TeamOutlined />,
+	BookOutlined: <BookOutlined />,
 	CalendarOutlined: <CalendarOutlined />,
+	CheckCircleOutlined: <CheckCircleOutlined />,
+	ExperimentOutlined: <ExperimentOutlined />,
+	FileDoneOutlined: <FileDoneOutlined />,
+	FileTextOutlined: <FileTextOutlined />,
+	FormOutlined: <FormOutlined />,
+	HeartOutlined: <HeartOutlined />,
+	PieChartOutlined: <PieChartOutlined />,
+	ProfileOutlined: <ProfileOutlined />,
+	SafetyCertificateOutlined: <SafetyCertificateOutlined />,
+	SettingOutlined: <SettingOutlined />,
+	SoundOutlined: <SoundOutlined />,
+	UserOutlined: <UserOutlined />,
+	UserSwitchOutlined: <UserSwitchOutlined />,
+	TeamOutlined: <TeamOutlined />,
 	MedicineBoxOutlined: <MedicineBoxOutlined />,
 	WalletOutlined: <WalletOutlined />,
 	BarChartOutlined: <BarChartOutlined />,
-	SettingOutlined: <SettingOutlined />,
-	SoundOutlined: <SoundOutlined />,
+	WarningOutlined: <WarningOutlined />,
+	BugOutlined: <BugOutlined />,
 };
 
 /**

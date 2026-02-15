@@ -56,6 +56,7 @@
 			{
 				"key": "clinical:vitals",
 				"label": "Vitals",
+				"icon": "HeartOutlined",
 				"path": "/clinical/vitals",
 				"component": "Vitals",
 				"prefetch": false,
@@ -67,6 +68,7 @@
 			{
 				"key": "clinical:emr",
 				"label": "EMR",
+				"icon": "FileTextOutlined",
 				"path": "/clinical/emr",
 				"component": "EMR",
 				"prefetch": false,
@@ -78,6 +80,7 @@
 			{
 				"key": "clinical:prescriptions",
 				"label": "Prescriptions",
+				"icon": "FileDoneOutlined",
 				"path": "/clinical/prescriptions",
 				"component": "Prescriptions",
 				"prefetch": false,
@@ -89,6 +92,7 @@
 			{
 				"key": "clinical:lab",
 				"label": "Lab Results",
+				"icon": "ExperimentOutlined",
 				"path": "/clinical/lab",
 				"component": "LabResults",
 				"prefetch": false,
@@ -108,6 +112,7 @@
 			{
 				"key": "billing:invoices",
 				"label": "Invoices",
+				"icon": "FileTextOutlined",
 				"path": "/billing/invoices",
 				"component": "Invoices",
 				"meta": { "title": "Invoices" },
@@ -118,6 +123,7 @@
 			{
 				"key": "billing:insurance",
 				"label": "Insurance",
+				"icon": "SafetyCertificateOutlined",
 				"path": "/billing/insurance",
 				"component": "Insurance",
 				"meta": { "title": "Insurance" },
@@ -139,6 +145,30 @@
 		"permissions": ["view_reports"]
 	},
 	{
+		"key": "crash-test",
+		"label": "Crash Test",
+		"icon": "WarningOutlined",
+		"path": "/crash-test",
+		"component": "CrashTestPage",
+		"prefetch": false,
+		"authRequired": true,
+		"roles": ["admin"],
+		"permissions": ["*"],
+		"meta": { "title": "Crash Test" }
+	},
+	{
+		"key": "bugs",
+		"label": "Bug Tracker",
+		"icon": "BugOutlined",
+		"path": "/bugs",
+		"component": "Bugs",
+		"prefetch": false,
+		"authRequired": true,
+		"roles": ["admin", "manager", "developer", "qa", "doctor", "nurse", "receptionist", "billing", "pharmacy", "hr", "employee", "user"],
+		"permissions": ["*"],
+		"meta": { "title": "Bug Tracker" }
+	},
+	{
 		"key": "hr",
 		"label": "HR",
 		"icon": "TeamOutlined",
@@ -147,6 +177,7 @@
 			{
 				"key": "hr:leaves:calendar",
 				"label": "Leave Calendar",
+				"icon": "CalendarOutlined",
 				"path": "/hr/leaves/calendar",
 				"component": "LeaveCalendar",
 				"prefetch": false,
@@ -157,6 +188,7 @@
 			{
 				"key": "hr:leaves:apply",
 				"label": "Apply Leave",
+				"icon": "FormOutlined",
 				"path": "/hr/leaves/apply",
 				"component": "LeaveApply",
 				"prefetch": false,
@@ -167,6 +199,7 @@
 			{
 				"key": "hr:leaves:my-requests",
 				"label": "My Requests",
+				"icon": "ProfileOutlined",
 				"path": "/hr/leaves/my-requests",
 				"component": "LeaveMyRequests",
 				"prefetch": false,
@@ -177,6 +210,7 @@
 			{
 				"key": "hr:leaves:approvals",
 				"label": "Approvals",
+				"icon": "CheckCircleOutlined",
 				"path": "/hr/leaves/approvals",
 				"component": "LeaveApprovals",
 				"prefetch": false,
@@ -187,6 +221,7 @@
 			{
 				"key": "hr:leaves:policies",
 				"label": "Policies",
+				"icon": "BookOutlined",
 				"path": "/hr/leaves/policies",
 				"component": "LeavePolicies",
 				"prefetch": false,
@@ -216,6 +251,7 @@
 			{
 				"key": "admin:users",
 				"label": "User Management",
+				"icon": "UserSwitchOutlined",
 				"path": "/admin/users",
 				"component": "UsersManagement",
 				"meta": { "title": "User Management" },
@@ -226,6 +262,7 @@
 			{
 				"key": "admin:roles",
 				"label": "Roles & Permissions",
+				"icon": "SafetyCertificateOutlined",
 				"path": "/admin/roles",
 				"component": "RolesPermissions",
 				"meta": { "title": "Roles & Permissions" },
@@ -236,6 +273,7 @@
 			{
 				"key": "admin:system",
 				"label": "System Settings",
+				"icon": "SettingOutlined",
 				"path": "/admin/system",
 				"component": "SystemSettings",
 				"meta": { "title": "System Settings" },

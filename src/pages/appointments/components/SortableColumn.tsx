@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Badge, Button, Empty, Typography } from 'antd';
+import { Badge, Button, Empty, Typography, theme } from 'antd';
 import { useMemo } from 'react';
 
 import AppointmentCard from './AppointmentCard';
@@ -31,6 +31,7 @@ const statusBackgrounds: Record<Appointment['status'], string> = {
 };
 
 export default function SortableColumn({ column, items, onEdit, onDelete, onAddNew }: Props) {
+	const { token } = theme.useToken();
 	const { setNodeRef, isOver } = useDroppable({
 		id: column.id,
 		data: { type: 'column', accepts: ['card'] },
@@ -47,15 +48,15 @@ export default function SortableColumn({ column, items, onEdit, onDelete, onAddN
 				minWidth: 320,
 				maxWidth: 320,
 				height: 'calc(100vh - 280px)',
-				background: '#f5f5f5',
+				background: token.colorBgContainer,
 				borderRadius: 8,
 				padding: 12,
 				marginRight: 16,
 				transition: 'all 0.3s ease',
 				boxShadow: isOver 
-					? '0 4px 12px rgba(0,0,0,0.15)' 
-					: '0 1px 3px rgba(0,0,0,0.05)',
-				border: isOver ? `2px solid ${statusColors[column.id]}` : '2px solid transparent',
+					? `0 4px 12px ${token.colorFillSecondary}` 
+					: `0 1px 3px ${token.colorFillTertiary}`,
+				border: isOver ? `2px solid ${statusColors[column.id]}` : `1px solid ${token.colorBorderSecondary}`,
 			}}
 		>
 			{/* Column Header */}
@@ -66,13 +67,13 @@ export default function SortableColumn({ column, items, onEdit, onDelete, onAddN
 					justifyContent: 'space-between',
 					marginBottom: 12,
 					padding: '8px 12px',
-					background: statusBackgrounds[column.id],
+					background: token.colorFillAlter,
 					borderRadius: 6,
 					borderLeft: `4px solid ${statusColors[column.id]}`,
 				}}
 			>
 				<div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-					<Typography.Text strong style={{ fontSize: 14, color: '#262626' }}>
+					<Typography.Text strong style={{ fontSize: 14, color: token.colorText }}>
 						{column.title}
 					</Typography.Text>
 					<Badge 
@@ -106,7 +107,7 @@ export default function SortableColumn({ column, items, onEdit, onDelete, onAddN
 					overflowX: 'hidden',
 					padding: '4px 4px 0 4px',
 					minHeight: 200,
-					background: isOver ? 'rgba(24, 144, 255, 0.05)' : 'transparent',
+					background: isOver ? token.colorFillSecondary : 'transparent',
 					borderRadius: 4,
 					transition: 'background 0.2s ease',
 				}}
@@ -124,7 +125,7 @@ export default function SortableColumn({ column, items, onEdit, onDelete, onAddN
 						<Empty
 							image={Empty.PRESENTED_IMAGE_SIMPLE}
 							description={
-								<span style={{ color: '#8c8c8c', fontSize: 12 }}>
+								<span style={{ color: token.colorTextSecondary, fontSize: 12 }}>
 									No appointments
 								</span>
 							}
@@ -147,16 +148,16 @@ export default function SortableColumn({ column, items, onEdit, onDelete, onAddN
 			{/* Footer Stats */}
 			<div
 				style={{
-					marginTop: 8,
-					padding: '8px 12px',
-					background: '#ffffff',
-					borderRadius: 6,
-					fontSize: 11,
-					color: '#8c8c8c',
-					textAlign: 'center',
-					border: '1px solid #f0f0f0',
-				}}
-			>
+				marginTop: 8,
+				padding: '8px 12px',
+				background: token.colorBgContainer,
+				borderRadius: 6,
+				fontSize: 11,
+				color: token.colorTextSecondary,
+				textAlign: 'center',
+				border: `1px solid ${token.colorBorderSecondary}`,
+			}}
+		>
 				{items.length} {items.length === 1 ? 'appointment' : 'appointments'}
 			</div>
 		</div>

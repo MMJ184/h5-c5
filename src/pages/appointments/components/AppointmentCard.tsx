@@ -1,8 +1,9 @@
 import { CalendarOutlined, ClockCircleOutlined, DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Avatar, Button, Card, Space, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Card, Space, Tag, Tooltip, theme } from 'antd';
 import dayjs from 'dayjs';
+import type { CSSProperties } from 'react';
 
 import type { Appointment } from '../hooks/useAppointments';
 
@@ -21,12 +22,13 @@ const statusColors: Record<Appointment['status'], string> = {
 };
 
 export default function AppointmentCard({ item, onEdit, onDelete, isOverlay }: Props) {
+	const { token } = theme.useToken();
 	const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
 		id: item.id,
 		data: { type: 'card', item },
 	});
 
-	const style: React.CSSProperties = {
+	const style: CSSProperties = {
 		transform: CSS.Transform.toString(transform),
 		transition,
 		marginBottom: 12,
@@ -41,11 +43,11 @@ export default function AppointmentCard({ item, onEdit, onDelete, isOverlay }: P
 				style={{
 					borderRadius: 8,
 					boxShadow: isOverlay 
-						? '0 8px 24px rgba(0,0,0,0.15)' 
-						: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)',
+						? token.boxShadowSecondary 
+						: token.boxShadow,
 					borderLeft: `4px solid ${statusColors[item.status]}`,
 					cursor: isDragging ? 'grabbing' : 'pointer',
-					background: '#ffffff',
+					background: token.colorBgContainer,
 					transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
 				}}
 				bodyStyle={{ padding: '12px' }}
@@ -56,20 +58,20 @@ export default function AppointmentCard({ item, onEdit, onDelete, isOverlay }: P
 					<div style={{ 
 						fontWeight: 600, 
 						fontSize: '14px', 
-						color: '#262626',
+						color: token.colorText,
 						lineHeight: '20px',
 					}}>
 						{item.title}
 					</div>
 
 					{/* Patient Info */}
-					<Space size="small" style={{ color: '#8c8c8c', fontSize: '13px' }}>
+					<Space size="small" style={{ color: token.colorTextSecondary, fontSize: '13px' }}>
 						<UserOutlined style={{ fontSize: '12px' }} />
 						<span>{item.patientName}</span>
 					</Space>
 
 					{/* Date & Time */}
-					<Space size="small" wrap style={{ fontSize: '12px', color: '#8c8c8c' }}>
+					<Space size="small" wrap style={{ fontSize: '12px', color: token.colorTextSecondary }}>
 						<Space size={4}>
 							<CalendarOutlined />
 							<span>{dayjs(item.date).format('MMM DD, YYYY')}</span>
@@ -94,7 +96,7 @@ export default function AppointmentCard({ item, onEdit, onDelete, isOverlay }: P
 						<Tooltip title={item.notes}>
 							<div style={{ 
 								fontSize: '12px', 
-								color: '#8c8c8c',
+								color: token.colorTextSecondary,
 								overflow: 'hidden',
 								textOverflow: 'ellipsis',
 								whiteSpace: 'nowrap',
@@ -113,7 +115,7 @@ export default function AppointmentCard({ item, onEdit, onDelete, isOverlay }: P
 								gap: 8,
 								marginTop: 8,
 								paddingTop: 8,
-								borderTop: '1px solid #f0f0f0'
+								borderTop: `1px solid ${token.colorBorderSecondary}`
 							}}
 							onClick={(e) => e.stopPropagation()}
 						>
